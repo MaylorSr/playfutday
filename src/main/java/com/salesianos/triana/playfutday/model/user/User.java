@@ -7,9 +7,11 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -29,7 +31,7 @@ public class User {
     @GenericGenerator(
             name = "UUID",
             strategy = "org.hibernate.id.UUIDGenerator"
-            /*,
+            /*
             parameters = {
                     @Parameter(
                             name = "uuid_gen_strategy_class",
@@ -37,6 +39,7 @@ public class User {
                     )
             }
             */
+
     )
     @Column(columnDefinition = "uuid")
     private UUID id;
@@ -45,19 +48,22 @@ public class User {
     @Column(unique = true, updatable = false)
     private String userName;
 
+    @Email()
     private String email;
 
     private String password;
 
-    private String avatar;
+    @Builder.Default
+    private String avatar = "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png";
 
+    @Length(max = 200)
     private String biography;
 
     @NotBlank()
     private int phone;
 
-
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @Builder.Default
     private List<Post> myPost = new ArrayList<>();
 
 

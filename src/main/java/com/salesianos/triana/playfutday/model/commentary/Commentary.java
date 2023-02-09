@@ -1,4 +1,4 @@
-package com.salesianos.triana.playfutday.model.comment;
+package com.salesianos.triana.playfutday.model.commentary;
 
 import com.salesianos.triana.playfutday.model.post.Post;
 import com.salesianos.triana.playfutday.model.user.User;
@@ -7,19 +7,20 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
 import java.util.UUID;
 
 @Entity
-@Table(name = "comment_entity")
+@Table(name = "commentary")
 @EntityListeners(AuditingEntityListener.class)
 @Data
-@Builder
-@AllArgsConstructor
 @NoArgsConstructor
-public class Comment {
+@AllArgsConstructor
+@Builder
+public class Commentary {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
@@ -34,14 +35,18 @@ public class Comment {
             }
             */
     )
-    @Column(columnDefinition = "uuid")
     private UUID id;
 
-    private String value;
+    @Length(max = 80)
+    private String message;
 
-    /*
+    @ManyToOne
+    @JoinColumn(name = "post_id")
+    private Post post;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
     private User user;
 
-    private Post post;
-*/
+
 }
