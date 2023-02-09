@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.model.post;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.model.commentary.Commentary;
 import com.salesianos.triana.playfutday.model.user.User;
 import lombok.AllArgsConstructor;
@@ -47,6 +48,7 @@ public class Post {
     private String image;
 
     @CreatedDate
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime uploadDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
