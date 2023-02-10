@@ -47,9 +47,8 @@ public class User {
 
     @NaturalId
     @Column(unique = true, updatable = false)
-    private String userName;
+    private String username;
 
-    @Email()
     private String email;
 
     private String password;
@@ -57,17 +56,15 @@ public class User {
     @Builder.Default
     private String avatar = "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png";
 
-    @Length(max = 200)
     private String biography;
 
-    @NotBlank()
     private int phone;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Post> myPost = new ArrayList<>();
-
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    /*
+        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")*/
     private LocalDate birthday;
     /**ENTREGAR ROL COMO RESPUESTA PARA MOSTRAR UNA COSA O NO EN EL FLUTTER*/
 
