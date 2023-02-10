@@ -15,26 +15,13 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "commentary")
-@EntityListeners(AuditingEntityListener.class)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Commentary {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-            /*,
-            parameters = {
-                    @Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )
-            }
-            */
-    )
+    @GeneratedValue()
     private UUID id;
 
     @Length(max = 80)

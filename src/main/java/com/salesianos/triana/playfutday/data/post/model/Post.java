@@ -20,49 +20,39 @@ import java.util.UUID;
 
 @Entity
 @Table(name = "post_entity")
-@EntityListeners(AuditingEntityListener.class)
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 public class Post {
     @Id
-    @GeneratedValue(generator = "UUID")
-    @GenericGenerator(
-            name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-            /*,
-            parameters = {
-                    @Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )
-            }
-            */
-    )
-    private UUID id;
+    @GeneratedValue()
+    private Long id;
 
-    @Length(max = 100)
     private String description;
 
     private String image;
 
     @CreatedDate
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    /*
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")*/
     private LocalDateTime uploadDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_POST_USER"))
     private User author;
 
     @ManyToMany(fetch = FetchType.EAGER)
 //   control + shift + %
-    /* @JoinTable(
+ /*   @JoinTable(
             name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )*/
     private List<User> likes;
+    /**
+     * hay que borrar el token de acceso para poder deslogear
+     */
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @Builder.Default
