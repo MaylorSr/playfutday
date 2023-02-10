@@ -1,7 +1,7 @@
-package com.salesianos.triana.playfutday.model.commentary;
+package com.salesianos.triana.playfutday.data.commentary.model;
 
-import com.salesianos.triana.playfutday.model.post.Post;
-import com.salesianos.triana.playfutday.model.user.User;
+import com.salesianos.triana.playfutday.data.post.model.Post;
+import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

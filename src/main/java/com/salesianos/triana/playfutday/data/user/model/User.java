@@ -1,7 +1,7 @@
-package com.salesianos.triana.playfutday.model.user;
+package com.salesianos.triana.playfutday.data.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.salesianos.triana.playfutday.model.post.Post;
+import com.salesianos.triana.playfutday.data.post.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

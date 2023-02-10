@@ -1,8 +1,8 @@
-package com.salesianos.triana.playfutday.model.post;
+package com.salesianos.triana.playfutday.data.post.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.salesianos.triana.playfutday.model.commentary.Commentary;
-import com.salesianos.triana.playfutday.model.user.User;
+import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
+import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -56,11 +56,12 @@ public class Post {
     private User author;
 
     @ManyToMany(fetch = FetchType.EAGER)
-    @JoinTable(
+//   control + shift + %
+    /* @JoinTable(
             name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
-    )
+    )*/
     private List<User> likes;
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
