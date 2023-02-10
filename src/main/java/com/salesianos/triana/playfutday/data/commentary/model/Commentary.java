@@ -8,13 +8,16 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Entity
-@Table(name = "commentary")
+@Table(name = "commentary_entity")
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
@@ -22,10 +25,12 @@ import java.util.UUID;
 public class Commentary {
     @Id
     @GeneratedValue()
-    private UUID id;
+    private Long id;
 
-    @Length(max = 80)
     private String message;
+
+    @CreatedDate
+    private LocalDate updateCommentary;
 
     @ManyToOne
     @JoinColumn(name = "post_id")
@@ -34,6 +39,5 @@ public class Commentary {
     @ManyToOne
     @JoinColumn(name = "user_id")
     private User user;
-
 
 }
