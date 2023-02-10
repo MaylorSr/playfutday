@@ -1,7 +1,7 @@
 package com.salesianos.triana.playfutday.data.user.dto;
 
+
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.salesianos.triana.playfutday.data.interfaces.user.ViewUser;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @AllArgsConstructor
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class JwtUserResponse extends ViewUser.UserResponse {
+public class JwtUserResponse extends UserResponse {
 
     private String token;
     private String refreshToken;
@@ -21,8 +21,6 @@ public class JwtUserResponse extends ViewUser.UserResponse {
     public JwtUserResponse(UserResponse userResponse) {
         id = userResponse.getId();
         username = userResponse.getUsername();
-        fullName = userResponse.getFullName();
-        avatar = userResponse.getAvatar();
         createdAt = userResponse.getCreatedAt();
     }
 

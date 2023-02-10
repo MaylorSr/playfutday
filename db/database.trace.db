@@ -1,0 +1,32 @@
+2023-02-10 13:55:10 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "[*]POST_LIKES"; se esperaba "PREPARE"
+Syntax error in SQL statement "[*]POST_LIKES"; expected "PREPARE"; SQL statement:
+POST_LIKES [42001-214]
+2023-02-10 14:04:21 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"
+Data conversion error converting "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."USER_ENTITY"("ID","ACCOUNT_NON_EXPIRED","ACCOUNT_NON_LOCKED","AVATAR","BIOGRAPHY","BIRTHDAY","CREATED_AT","CREDENTIALS_NON_EXPIRED","EMAIL","ENABLED","LAST_PASSWORD_CHANGE_AT","PASSWORD","PHONE","USERNAME")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) [22018-214]
+2023-02-10 14:04:21 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"
+Data conversion error converting "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."USER_ENTITY"("ID","ACCOUNT_NON_EXPIRED","ACCOUNT_NON_LOCKED","AVATAR","BIOGRAPHY","BIRTHDAY","CREATED_AT","CREDENTIALS_NON_EXPIRED","EMAIL","ENABLED","LAST_PASSWORD_CHANGE_AT","PASSWORD","PHONE","USERNAME")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) [22018-214]
+2023-02-10 14:04:55 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLSyntaxErrorException: Error de Sintaxis en sentencia SQL "SELECT * FROM USER_ENTITY INTERSECT[*]"; se esperaba "(, SELECT, TABLE, VALUES"
+Syntax error in SQL statement "SELECT * FROM USER_ENTITY INTERSECT[*]"; expected "(, SELECT, TABLE, VALUES"; SQL statement:
+SELECT * FROM USER_ENTITY INTERSECT [42001-214]
+2023-02-10 14:26:54 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"
+Data conversion error converting "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."USER_ENTITY"("ID","ACCOUNT_NON_EXPIRED","ACCOUNT_NON_LOCKED","AVATAR","BIOGRAPHY","BIRTHDAY","CREATED_AT","CREDENTIALS_NON_EXPIRED","EMAIL","ENABLED","LAST_PASSWORD_CHANGE_AT","PASSWORD","PHONE","USERNAME")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) [22018-214]
+2023-02-10 14:26:54 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"
+Data conversion error converting "'1' (USER_ENTITY: ""ID"" UUID NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."USER_ENTITY"("ID","ACCOUNT_NON_EXPIRED","ACCOUNT_NON_LOCKED","AVATAR","BIOGRAPHY","BIRTHDAY","CREATED_AT","CREDENTIALS_NON_EXPIRED","EMAIL","ENABLED","LAST_PASSWORD_CHANGE_AT","PASSWORD","PHONE","USERNAME")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) [22018-214]
+2023-02-10 14:27:38 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (USER_ENTITY: ""ACCOUNT_NON_EXPIRED"" BOOLEAN NOT NULL)"
+Data conversion error converting "'' (USER_ENTITY: ""ACCOUNT_NON_EXPIRED"" BOOLEAN NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."USER_ENTITY"("ID","ACCOUNT_NON_EXPIRED","ACCOUNT_NON_LOCKED","AVATAR","BIOGRAPHY","BIRTHDAY","CREATED_AT","CREDENTIALS_NON_EXPIRED","EMAIL","ENABLED","LAST_PASSWORD_CHANGE_AT","PASSWORD","PHONE","USERNAME")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) [22018-214]
+2023-02-10 14:27:38 jdbc[13]: exception
+org.h2.jdbc.JdbcSQLDataException: Conversión de datos fallida, convirtiendo "'' (USER_ENTITY: ""ACCOUNT_NON_EXPIRED"" BOOLEAN NOT NULL)"
+Data conversion error converting "'' (USER_ENTITY: ""ACCOUNT_NON_EXPIRED"" BOOLEAN NOT NULL)"; SQL statement:
+INSERT INTO "PUBLIC"."USER_ENTITY"("ID","ACCOUNT_NON_EXPIRED","ACCOUNT_NON_LOCKED","AVATAR","BIOGRAPHY","BIRTHDAY","CREATED_AT","CREDENTIALS_NON_EXPIRED","EMAIL","ENABLED","LAST_PASSWORD_CHANGE_AT","PASSWORD","PHONE","USERNAME")VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?) [22018-214]

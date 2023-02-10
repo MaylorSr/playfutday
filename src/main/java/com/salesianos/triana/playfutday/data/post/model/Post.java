@@ -39,17 +39,20 @@ public class Post {
     private LocalDateTime uploadDate;
 
     @ManyToOne(fetch = FetchType.EAGER)
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_POST_USER"))
     private User author;
 
     @ManyToMany(fetch = FetchType.EAGER)
 //   control + shift + %
-    /* @JoinTable(
+ /*   @JoinTable(
             name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id")
     )*/
     private List<User> likes;
+    /**
+     * hay que borrar el token de acceso para poder deslogear
+     */
 
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @Builder.Default

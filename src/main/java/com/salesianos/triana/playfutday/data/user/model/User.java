@@ -1,6 +1,5 @@
 package com.salesianos.triana.playfutday.data.user.model;
 
-import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -8,16 +7,18 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.annotations.GenericGenerator;
 import org.hibernate.annotations.NaturalId;
-import org.hibernate.validator.constraints.Length;
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import javax.persistence.*;
-import javax.validation.constraints.Email;
-import javax.validation.constraints.NotBlank;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.time.LocalDateTime;
+import java.util.*;
+import java.util.stream.Collectors;
+
 
 @Entity
 @Table(name = "user_entity")
@@ -26,20 +27,22 @@ import java.util.UUID;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class User {
+public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
     @GenericGenerator(
             name = "UUID",
-            strategy = "org.hibernate.id.UUIDGenerator"
-            /*
+            strategy = "org.hibernate.id.UUIDGenerator",
             parameters = {
+                    @org.hibernate.annotations.Parameter(
+                            name = "uuid_gen_strategy_class",
+                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
+                    )/*
                     @Parameter(
                             name = "uuid_gen_strategy_class",
                             value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )
+                    )*/
             }
-            */
 
     )
     @Column(columnDefinition = "uuid")
@@ -69,11 +72,12 @@ public class User {
     /**ENTREGAR ROL COMO RESPUESTA PARA MOSTRAR UNA COSA O NO EN EL FLUTTER*/
 
 
-    /**IMPLEMENTAR UNA CLASE QUE SEA ROLES QUE TENGA UNA COLECCION DE SET DE USERROLES SET<USERROLE> O TENER UN
+    /**
+     * IMPLEMENTAR UNA CLASE QUE SEA ROLES QUE TENGA UNA COLECCION DE SET DE USERROLES SET<USERROLE> O TENER UN
      * ENUMSET<USERROLE>
      * PASAR DE @ELEMENTCOLLECTION A SER ATTRIBUTECONVERTER<ROLES, STRING> EN LA BD SE GUARDARÁ COMO CON "ADMIN, MANAGER"
-     * **/
-    /*
+     **/
+
     @Builder.Default
     private boolean accountNonExpired = true;
     @Builder.Default
@@ -81,8 +85,10 @@ public class User {
     @Builder.Default
     private boolean credentialsNonExpired = true;
 
-    /**SI SE CAMBIA A FALSE LO QUE PODEMOS HACER CON ESO ES BANEARLO*/
-            /*
+    /**
+     * SI SE CAMBIA A FALSE LO QUE PODEMOS HACER CON ESO ES BANEARLO
+     */
+
     @Builder.Default
     private boolean enabled = true;
 
@@ -95,7 +101,44 @@ public class User {
     @Builder.Default
     private LocalDateTime lastPasswordChangeAt = LocalDateTime.now();
 
-     */
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roles.stream()
+                .map(role -> "ROLE_" + role)
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return accountNonExpired;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return accountNonLocked;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return credentialsNonExpired;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return enabled;
+    }
 
 
 }
