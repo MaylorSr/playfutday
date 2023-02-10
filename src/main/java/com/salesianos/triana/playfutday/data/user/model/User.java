@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.data.user.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -66,8 +67,8 @@ public class User implements UserDetails {
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
     private List<Post> myPost = new ArrayList<>();
-    /*
-        @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")*/
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
     /**ENTREGAR ROL COMO RESPUESTA PARA MOSTRAR UNA COSA O NO EN EL FLUTTER*/
 
