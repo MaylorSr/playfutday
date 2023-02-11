@@ -2,6 +2,7 @@ package com.salesianos.triana.playfutday.data.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
+import com.salesianos.triana.playfutday.data.user.database.EnumSetUserRoleConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,11 +39,7 @@ public class User implements UserDetails {
                     @org.hibernate.annotations.Parameter(
                             name = "uuid_gen_strategy_class",
                             value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )/*
-                    @Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )*/
+                    )
             }
 
     )
@@ -94,6 +91,7 @@ public class User implements UserDetails {
     private boolean enabled = true;
 
     @ElementCollection(fetch = FetchType.EAGER)
+    @Convert(converter = EnumSetUserRoleConverter.class)
     private Set<UserRole> roles;
 
     @CreatedDate

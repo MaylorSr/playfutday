@@ -3,56 +3,73 @@ package com.salesianos.triana.playfutday.data.user.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
-import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
+import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import javax.persistence.ElementCollection;
+import javax.persistence.FetchType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.EnumSet;
 import java.util.List;
+import java.util.Set;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserResponse {
-    @JsonView({viewUser.UserDetailsByAdmin.class, viewPost.PostAdmin.class})
+
+    @JsonView({viewUser.UserDetailsByAdmin.class})
     protected UUID id;
-    @JsonView({viewUser.class, viewPost.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String username;
-    @JsonView({viewUser.UserDetailsByAdmin.class, viewPost.PostAdmin.class})
+    @JsonView({viewUser.UserDetailsByAdmin.class})
     @Builder.Default
     protected LocalDateTime createdAt = LocalDateTime.now();
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String email;
-    @JsonView({viewUser.class, viewPost.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String avatar;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewPost.PostResponse.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String biography;
-    @JsonView({viewUser.UserInfo.class})
+    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected int phone;
-    @JsonView({viewUser.UserInfo.class, viewUser.UserResponse.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate birthday;
-    @JsonView(viewUser.UserDetailsByAdmin.class)
+    @JsonView({viewUser.UserDetailsByAdmin.class})
     protected boolean enabled;
-    @JsonView({viewUser.class, viewPost.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected List<PostResponse> myPost;
-
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    protected static List<String> roles;
 
     /**
      * ROLES DE USUARIO QUEDA
      */
     public static UserResponse fromUser(User user) {
-        return UserResponse.builder()
+        EnumSet<UserRole> userRolesEnumSet = EnumSet.noneOf(UserRole.class);
+        if (!roles.isEmpty()) {
+            userRolesEnumSet = roles.stream()
+                    .map(String::toUpperCase)
+                    .filter(UserRole::contains)
+                    .map(UserRole::valueOf)
+                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(UserRole.class)));
+        }
+
+        return UserResponse
+                .builder()
                 .id(user.getId())
                 .username(user.getUsername())
                 .email(user.getEmail())
@@ -63,6 +80,7 @@ public class UserResponse {
                 .createdAt(user.getCreatedAt())
                 .enabled(user.isEnabled())
                 .myPost(user.getMyPost().stream().map(PostResponse::of).toList())
+                .roles(userRolesEnumSet)
                 .build();
     }
 }
