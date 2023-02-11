@@ -13,8 +13,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.persistence.ElementCollection;
-import javax.persistence.FetchType;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.EnumSet;
@@ -53,18 +51,20 @@ public class UserResponse {
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected List<PostResponse> myPost;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
-    protected static List<String> roles;
+    protected List<String> roles;
 
     /**
      * ROLES DE USUARIO QUEDA
      */
     public static UserResponse fromUser(User user) {
+        Set<UserRole> roles = user.getRoles();
         EnumSet<UserRole> userRolesEnumSet = EnumSet.noneOf(UserRole.class);
+
         if (!roles.isEmpty()) {
             userRolesEnumSet = roles.stream()
-                    .map(String::toUpperCase)
+                    .map(r -> r.name().toUpperCase())
                     .filter(UserRole::contains)
-                    .map(UserRole::valueOf)
+                    .map(r -> UserRole.valueOf(r))
                     .collect(Collectors.toCollection(() -> EnumSet.noneOf(UserRole.class)));
         }
 
@@ -80,7 +80,7 @@ public class UserResponse {
                 .createdAt(user.getCreatedAt())
                 .enabled(user.isEnabled())
                 .myPost(user.getMyPost().stream().map(PostResponse::of).toList())
-                .roles(userRolesEnumSet)
+                .roles(userRolesEnumSet.stream().map(Enum::name).collect(Collectors.toList()))
                 .build();
     }
 }

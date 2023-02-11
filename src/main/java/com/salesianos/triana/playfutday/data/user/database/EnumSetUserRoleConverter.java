@@ -27,11 +27,10 @@ public class EnumSetUserRoleConverter implements AttributeConverter<EnumSet<User
     @Override
     public EnumSet<UserRole> convertToEntityAttribute(String dbData) {
         if (dbData != null) {
-            if (!dbData.isBlank()) { // isBlank Java 11
-                return Arrays.stream(dbData.split(SEPARADOR))
-                        .map(elem -> UserRole.valueOf(elem))
-                        .collect(Collectors.toCollection(() -> EnumSet.noneOf(UserRole.class)));
-            }
+            return Arrays.stream(dbData.split(SEPARADOR))
+                    .map(elem -> UserRole.valueOf(elem))
+                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(UserRole.class)));
+
         }
         return EnumSet.noneOf(UserRole.class);
     }

@@ -15,3 +15,10 @@ insert into COMMENTARY_ENTITY (id, message, post_id, user_id) values ('6', 'Viva
 insert into COMMENTARY_ENTITY (id, message, post_id, user_id) values ('7', '¿Pero quién es ese Neymar?', '4', 'd750a992-6aa6-4f75-b418-ead273c7f2a0');
 insert into COMMENTARY_ENTITY (id, message, post_id, user_id) values ('8', 'Cr7 el mejor', '2', '9733327f-5447-4d9f-a59a-c904c3e20f0a');
 insert into COMMENTARY_ENTITY (id, message, post_id, user_id) values ('9', 'Vaya basura cr7!', '1', 'd750a992-6aa6-4f75-b418-ead273c7f2a0');
+
+insert into USER_ROLES (user_id, roles) values ('9733327f-5447-4d9f-a59a-c904c3e20f0a', 'ADMIN');
+insert into USER_ROLES (user_id, roles) values ('1b84f2a2-409b-4d4a-8c75-998a28a0d198', 'USER');
+insert into USER_ROLES (user_id, roles) values ('d750a992-6aa6-4f75-b418-ead273c7f2a0', 'USER');
+insert into USER_ROLES (user_id, roles) values ('79a06606-d4a8-4e81-b5e2-ef303724085b', 'USER');
+insert into USER_ROLES (user_id, roles) values ('d8825163-3195-4f7c-8142-a5fa44da7b16', 'USER');
+insert into USER_ROLES (user_id, roles) values ('65582b7a-3c16-4634-9753-a3645d1d29c3', 'USER');
