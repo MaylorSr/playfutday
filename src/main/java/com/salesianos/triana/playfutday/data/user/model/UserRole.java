@@ -13,8 +13,6 @@ public enum UserRole {
         } catch (IllegalArgumentException ex) {
             return false;
         }
-
-
     }
 
 

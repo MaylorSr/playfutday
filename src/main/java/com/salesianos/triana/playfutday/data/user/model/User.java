@@ -41,11 +41,9 @@ public class User implements UserDetails {
                             value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
                     )
             }
-
     )
     @Column(columnDefinition = "uuid")
     private UUID id;
-
     @NaturalId
     @Column(unique = true, updatable = false)
     private String username;
@@ -67,7 +65,6 @@ public class User implements UserDetails {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
-    /**ENTREGAR ROL COMO RESPUESTA PARA MOSTRAR UNA COSA O NO EN EL FLUTTER*/
 
 
     /**
@@ -86,11 +83,9 @@ public class User implements UserDetails {
     /**
      * SI SE CAMBIA A FALSE LO QUE PODEMOS HACER CON ESO ES BANEARLO
      */
-
     @Builder.Default
     private boolean enabled = true;
 
-    @ElementCollection(fetch = FetchType.EAGER)
     @Convert(converter = EnumSetUserRoleConverter.class)
     private Set<UserRole> roles;
 

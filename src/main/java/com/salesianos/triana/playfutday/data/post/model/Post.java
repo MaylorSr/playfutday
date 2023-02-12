@@ -36,15 +36,15 @@ public class Post {
     private String image;
 
     @CreatedDate
+    @Builder.Default
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
-    private LocalDateTime uploadDate;
+    private LocalDateTime uploadDate = LocalDateTime.now();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_POST_USER"))
     private User author;
 
-    @ManyToMany(fetch = FetchType.EAGER)
-//   control + shift + %
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @JoinTable(
             name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -54,7 +54,6 @@ public class Post {
     /**
      * hay que borrar el token de acceso para poder deslogear
      */
-
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Commentary> commentaries = new ArrayList<>();

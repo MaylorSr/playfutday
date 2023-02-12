@@ -30,7 +30,6 @@ public class UserService {
                 .phone(createUserRequest.getPhone())
                 .roles(roles)
                 .build();
-
         return userRepository.save(user);
     }
 

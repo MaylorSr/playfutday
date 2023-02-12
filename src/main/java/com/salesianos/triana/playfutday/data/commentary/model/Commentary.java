@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.data.commentary.model;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.AllArgsConstructor;
@@ -30,14 +31,16 @@ public class Commentary {
     private String message;
 
     @CreatedDate
-    private LocalDate updateCommentary;
+    @Builder.Default
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
+    private LocalDate updateCommentary = LocalDate.now();
 
     @ManyToOne
-    @JoinColumn(name = "post_id")
+    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_COMMENTARY_IN_POST"))
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "user_id")
+    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_COMMENTARY_BY_USER"))
     private User user;
 
 }

@@ -22,25 +22,25 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@JsonInclude(JsonInclude.Include.NON_NULL)
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PostResponse {
 
-    @JsonView({viewPost.PostAdmin.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostAdmin.class, viewUser.UserInfo.class})
     protected Long id;
-    @JsonView({viewPost.class, viewUser.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected String tag;
-    @JsonView({viewPost.class, viewUser.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected String description;
-    @JsonView({viewPost.class, viewUser.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected String image;
-    @JsonView({viewPost.class, viewUser.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     protected LocalDateTime uploadDate;
-    @JsonView({viewPost.class, viewUser.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected String author;
-    @JsonView({viewPost.class, viewUser.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected List<UserResponse> likesByAuthor;
-    @JsonView({viewPost.class, viewUser.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected List<CommentaryResponse> commentaries;
 
     public static PostResponse of(Post post) {

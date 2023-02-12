@@ -1,7 +1,4 @@
 package com.salesianos.triana.playfutday.data.commentary.dto;
-
-import com.salesianos.triana.playfutday.data.post.model.Post;
-import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;

@@ -28,13 +28,13 @@ import java.util.stream.Collectors;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class UserResponse {
 
-    @JsonView({viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected UUID id;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String username;
     @JsonView({viewUser.UserDetailsByAdmin.class})
-    @Builder.Default
-    protected LocalDateTime createdAt = LocalDateTime.now();
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
+    protected LocalDateTime createdAt;
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String email;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
@@ -50,24 +50,10 @@ public class UserResponse {
     protected boolean enabled;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected List<PostResponse> myPost;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
-    protected List<String> roles;
+    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    protected Set<UserRole> roles;
 
-    /**
-     * ROLES DE USUARIO QUEDA
-     */
     public static UserResponse fromUser(User user) {
-        Set<UserRole> roles = user.getRoles();
-        EnumSet<UserRole> userRolesEnumSet = EnumSet.noneOf(UserRole.class);
-
-        if (!roles.isEmpty()) {
-            userRolesEnumSet = roles.stream()
-                    .map(r -> r.name().toUpperCase())
-                    .filter(UserRole::contains)
-                    .map(r -> UserRole.valueOf(r))
-                    .collect(Collectors.toCollection(() -> EnumSet.noneOf(UserRole.class)));
-        }
-
         return UserResponse
                 .builder()
                 .id(user.getId())
@@ -80,7 +66,7 @@ public class UserResponse {
                 .createdAt(user.getCreatedAt())
                 .enabled(user.isEnabled())
                 .myPost(user.getMyPost().stream().map(PostResponse::of).toList())
-                .roles(userRolesEnumSet.stream().map(Enum::name).collect(Collectors.toList()))
+                .roles(user.getRoles())
                 .build();
     }
 }

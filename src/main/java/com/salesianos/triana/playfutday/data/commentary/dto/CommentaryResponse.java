@@ -6,12 +6,12 @@ import com.fasterxml.jackson.annotation.JsonView;
 import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.interfaces.commentary.viewCommentary;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
+import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import javax.validation.constraints.Pattern;
 import java.time.LocalDate;
 
 @Data
@@ -20,6 +20,10 @@ import java.time.LocalDate;
 @SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentaryResponse {
+
+    @JsonView({viewCommentary.CommentaryResponse.class, viewUser.UserDetailsByAdmin.class})
+    private Long id;
+
     @JsonView({viewCommentary.CommentaryResponse.class, viewPost.class})
     protected String message;
 
@@ -32,6 +36,7 @@ public class CommentaryResponse {
 
     public static CommentaryResponse of(Commentary commentary) {
         return CommentaryResponse.builder()
+                .id(commentary.getId())
                 .message(commentary.getMessage())
                 .authorName(commentary.getUser().getUsername())
                 .uploadCommentary(commentary.getUpdateCommentary())
