@@ -23,6 +23,7 @@ import java.io.IOException;
 import java.util.Optional;
 import java.util.UUID;
 
+
 @Log
 @Component
 @RequiredArgsConstructor
@@ -36,11 +37,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private HandlerExceptionResolver resolver;
 
 
-
     @Override
-    protected void doFilterInternal(HttpServletRequest request,
-                                    HttpServletResponse response,
-                                    FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
 
         String token = getJwtTokenFromRequest(request);
 
@@ -73,7 +71,6 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             log.info("Authentication error using token JWT: " + ex.getMessage());
             resolver.resolveException(request, response, null, ex);
         }
-
 
 
     }

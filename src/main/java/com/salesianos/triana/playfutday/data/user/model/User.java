@@ -2,6 +2,7 @@ package com.salesianos.triana.playfutday.data.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.salesianos.triana.playfutday.data.post.model.Post;
+import com.salesianos.triana.playfutday.data.user.database.EnumSetUserRoleConverter;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -38,17 +39,11 @@ public class User implements UserDetails {
                     @org.hibernate.annotations.Parameter(
                             name = "uuid_gen_strategy_class",
                             value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )/*
-                    @Parameter(
-                            name = "uuid_gen_strategy_class",
-                            value = "org.hibernate.id.uuid.CustomVersionOneStrategy"
-                    )*/
+                    )
             }
-
     )
     @Column(columnDefinition = "uuid")
     private UUID id;
-
     @NaturalId
     @Column(unique = true, updatable = false)
     private String username;
@@ -62,7 +57,7 @@ public class User implements UserDetails {
 
     private String biography;
 
-    private int phone;
+    private String phone;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
@@ -70,7 +65,6 @@ public class User implements UserDetails {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
-    /**ENTREGAR ROL COMO RESPUESTA PARA MOSTRAR UNA COSA O NO EN EL FLUTTER*/
 
 
     /**
@@ -89,11 +83,10 @@ public class User implements UserDetails {
     /**
      * SI SE CAMBIA A FALSE LO QUE PODEMOS HACER CON ESO ES BANEARLO
      */
-
     @Builder.Default
     private boolean enabled = true;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @Convert(converter = EnumSetUserRoleConverter.class)
     private Set<UserRole> roles;
 
     @CreatedDate

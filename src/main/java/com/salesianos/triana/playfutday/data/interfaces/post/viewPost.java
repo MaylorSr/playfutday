@@ -1,10 +1,11 @@
 package com.salesianos.triana.playfutday.data.interfaces.post;
 
 public interface viewPost {
-    public static class PostResponse {
+    static class PostResponse {
     }
 
-    public static class PostResponseUser extends PostResponse {
+    static class PostAdmin extends PostResponse {
+
     }
 
 }

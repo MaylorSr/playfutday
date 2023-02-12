@@ -24,11 +24,11 @@ public class UserService {
     public User createUser(UserRequest createUserRequest, EnumSet<UserRole> roles) {
         User user = User.builder()
                 .username(createUserRequest.getUsername())
+                .email(createUserRequest.getEmail())
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .phone(createUserRequest.getPhone())
                 .roles(roles)
                 .build();
-
         return userRepository.save(user);
     }
 
@@ -53,10 +53,6 @@ public class UserService {
     }
 
     public Optional<User> edit(User user) {
-
-        // El username no se puede editar
-        // La contraseña se edita en otro método
-
         return userRepository.findById(user.getId())
                 .map(u -> {
                     u.setAvatar(user.getAvatar());
@@ -90,5 +86,6 @@ public class UserService {
     public boolean passwordMatch(User user, String clearPassword) {
         return passwordEncoder.matches(clearPassword, user.getPassword());
     }
+
 
 }

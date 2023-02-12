@@ -27,6 +27,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @RequiredArgsConstructor
 public class SecurityConfig {
 
+
     private final UserDetailsService userDetailsService;
     private final PasswordEncoder passwordEncoder;
 
@@ -38,8 +39,23 @@ public class SecurityConfig {
     public AuthenticationManager authenticationManager(HttpSecurity http) throws Exception {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
-        return authenticationManagerBuilder.authenticationProvider(authenticationProvider())
-                .build();
+
+
+        // Versión 1
+        /*
+        AuthenticationManager authenticationManager =
+                authenticationManagerBuilder
+                .userDetailsService(userDetailsService)
+                .passwordEncoder(passwordEncoder)
+                        .and().build();
+        */
+
+        // Versión 2
+        AuthenticationManager authenticationManager =
+                authenticationManagerBuilder.authenticationProvider(authenticationProvider())
+                        .build();
+
+        return authenticationManager;
 
     }
 
@@ -55,6 +71,9 @@ public class SecurityConfig {
         return authenticationProvider;
 
     }
+
+
+
 
 
     @Bean
@@ -76,6 +95,7 @@ public class SecurityConfig {
                 .anyRequest().authenticated();
 
 
+
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
 
@@ -88,6 +108,5 @@ public class SecurityConfig {
     public WebSecurityCustomizer webSecurityCustomizer() {
         return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/refreshtoken"));
     }
-
 
 }
