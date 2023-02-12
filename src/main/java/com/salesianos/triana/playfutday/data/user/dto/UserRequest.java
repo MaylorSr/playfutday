@@ -20,7 +20,7 @@ public class UserRequest {
     @Email(message = "{createUserRequest.email.blank}")
     private String email;
     @NotBlank(message = "{createUserRequest.phone.blank}")
-    private int phone;
+    private String phone;
 
     @NotBlank(message = "{createUserRequest.password.blank}")
     private String password;

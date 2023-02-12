@@ -58,7 +58,6 @@ public class UserController {
     @PostMapping("/auth/login")
     public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
 
-        // Realizamos la autenticación
 
         Authentication authentication =
                 authManager.authenticate(

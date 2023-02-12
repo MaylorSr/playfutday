@@ -42,7 +42,7 @@ public class UserResponse {
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String biography;
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
-    protected int phone;
+    protected String phone;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate birthday;

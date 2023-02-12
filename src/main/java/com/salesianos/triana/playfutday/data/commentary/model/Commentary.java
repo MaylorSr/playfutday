@@ -34,13 +34,12 @@ public class Commentary {
     @Builder.Default
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate updateCommentary = LocalDate.now();
-
     @ManyToOne
-    @JoinColumn(name = "post_id", foreignKey = @ForeignKey(name = "FK_COMMENTARY_IN_POST"))
+    @JoinColumn(name = "post_id")
     private Post post;
 
     @ManyToOne
-    @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_COMMENTARY_BY_USER"))
+    @JoinColumn(name = "user_id")
     private User user;
 
 }

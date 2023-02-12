@@ -57,7 +57,7 @@ public class User implements UserDetails {
 
     private String biography;
 
-    private int phone;
+    private String phone;
 
     @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @Builder.Default
