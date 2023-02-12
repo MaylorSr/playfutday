@@ -4,10 +4,9 @@ package com.salesianos.triana.playfutday.security.jwt.access;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.security.errorhandling.JwtTokenException;
 import io.jsonwebtoken.*;
-import io.jsonwebtoken.impl.crypto.MacProvider;
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Service;
 import org.springframework.security.core.Authentication;
 
@@ -18,6 +17,7 @@ import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
 
+
 @Log
 @Service
 public class JwtProvider {
@@ -25,7 +25,6 @@ public class JwtProvider {
     public static final String TOKEN_TYPE = "JWT";
     public static final String TOKEN_HEADER = "Authorization";
     public static final String TOKEN_PREFIX = "Bearer ";
-
 
     @Value("${jwt.secret}")
     private String jwtSecret;
@@ -40,13 +39,12 @@ public class JwtProvider {
 
     @PostConstruct
     public void init() {
-        /*
-        secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());*/
-        secretKey = MacProvider.generateKey(SignatureAlgorithm.HS256);
 
+        secretKey = Keys.hmacShaKeyFor(jwtSecret.getBytes());
 
-        jwtParser = Jwts.parser()
-                .setSigningKey(secretKey);
+        jwtParser = Jwts.parserBuilder()
+                .setSigningKey(secretKey)
+                .build();
     }
 
 
@@ -63,6 +61,7 @@ public class JwtProvider {
                 Date.from(
                         LocalDateTime
                                 .now()
+                                //.plusDays(jwtLifeInDays)
                                 .plusMinutes(jwtLifeInMinutes)
                                 .atZone(ZoneId.systemDefault())
                                 .toInstant()
@@ -73,8 +72,7 @@ public class JwtProvider {
                 .setSubject(user.getId().toString())
                 .setIssuedAt(new Date())
                 .setExpiration(tokenExpirationDateTime)
-                /*
-                .signWith(secretKey)*/
+                .signWith(secretKey)
                 .compact();
 
     }
@@ -92,7 +90,7 @@ public class JwtProvider {
         try {
             jwtParser.parseClaimsJws(token);
             return true;
-        } catch (MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
                  IllegalArgumentException ex) {
             log.info("Error con el token: " + ex.getMessage());
             throw new JwtTokenException(ex.getMessage());

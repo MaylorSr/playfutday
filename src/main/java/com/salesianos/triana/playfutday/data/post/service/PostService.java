@@ -2,7 +2,9 @@ package com.salesianos.triana.playfutday.data.post.service;
 
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
+import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.RequiredArgsConstructor;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.stereotype.Service;
 
 import java.util.List;

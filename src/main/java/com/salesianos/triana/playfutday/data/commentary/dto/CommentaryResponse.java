@@ -24,13 +24,13 @@ public class CommentaryResponse {
     @JsonView({viewCommentary.CommentaryResponse.class, viewUser.UserDetailsByAdmin.class})
     private Long id;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.class})
+    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class})
     protected String message;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.class})
+    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class})
     protected String authorName;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.class})
+    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate uploadCommentary;
 
