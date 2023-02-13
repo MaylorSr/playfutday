@@ -93,11 +93,13 @@ public class SecurityConfig {
                 .antMatchers("/post/user/{id}").hasRole("USER")
                 .antMatchers("/post/user/{id}/user/{idU}").hasRole("USER")
                 .antMatchers("/post/like/{id}").hasRole("USER")
+                .antMatchers("/fav").hasRole("USER")
                 .antMatchers("/post/**").hasRole("ADMIN")
                 .antMatchers("/post/delete/commentary/{id}").hasRole("ADMIN")
                 .antMatchers("/auth/register/admin").hasRole("ADMIN")
                 .antMatchers("/banUserByAdmin/{id}").hasRole("ADMIN")
                 .antMatchers("/changeRole/{id}").hasRole("ADMIN")
+                .antMatchers(("/user")).hasRole("ADMIN")
                 .anyRequest().authenticated();
 
 

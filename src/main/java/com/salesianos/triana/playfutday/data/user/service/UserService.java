@@ -1,6 +1,10 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
+import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
+import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
+import com.salesianos.triana.playfutday.data.post.model.Post;
+import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
@@ -21,6 +25,7 @@ public class UserService {
 
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
+    private final PostRepository postRepository;
 
     public User createUser(UserRequest createUserRequest, EnumSet<UserRole> roles) {
         User user = User.builder()
@@ -48,6 +53,19 @@ public class UserService {
     public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
     }
+
+    public List<UserResponse> findAllUsers() {
+        return userRepository.findAll().stream().map(UserResponse::fromUser).toList();
+    }
+
+
+    public List<PostResponse> findMyFavPost(User user) {
+
+        return postRepository.findAllPostFavUser(user.getId()).stream().map(PostResponse::of).toList();
+
+
+    }
+
 
     public UserResponse banUser(UUID id) {
         Optional<User> user = Optional.of(userRepository.findById(id).get());

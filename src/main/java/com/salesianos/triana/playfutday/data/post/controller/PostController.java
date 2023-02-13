@@ -31,6 +31,10 @@ public class PostController {
     private final PostRepository repo;
 
     /**
+     * put
+     */
+
+    /**
      * Muestra todos los post de los usuarios
      *
      * @return

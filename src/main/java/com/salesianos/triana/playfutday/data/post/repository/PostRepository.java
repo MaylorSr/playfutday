@@ -24,6 +24,10 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Post p JOIN p.likes l WHERE p.id = :postId AND l.id = :userId")
     boolean existsLikeByUser(@Param("postId") Long postId, @Param("userId") UUID userId);
 
+    @Query("select p from Post p JOIN p.likes l JOIN l.user u WHERE u.id =:id")
+    List<Post> findAllPostFavUser(@Param("id") UUID id);
+
+
 }
 
 

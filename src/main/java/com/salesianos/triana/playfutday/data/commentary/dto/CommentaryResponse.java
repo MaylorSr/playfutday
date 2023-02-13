@@ -21,16 +21,16 @@ import java.time.LocalDate;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class CommentaryResponse {
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewCommentary.CommentaryResponse.class, viewUser.UserDetailsByAdmin.class, viewUser.UserDetailsByAdmin.class})
     private Long id;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
+    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String message;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
+    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String authorName;
 
-    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
+    @JsonView({viewCommentary.CommentaryResponse.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate uploadCommentary;
 

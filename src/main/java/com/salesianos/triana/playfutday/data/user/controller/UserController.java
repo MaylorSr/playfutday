@@ -2,7 +2,9 @@ package com.salesianos.triana.playfutday.data.user.controller;
 
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
+import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
@@ -22,6 +24,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -42,6 +45,34 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
     }
+
+    /**
+     * OBTENER TODOS LOS USUARIOS PARA ALVISTA DEL ADMIN
+     */
+    @JsonView(viewUser.UserDetailsByAdmin.class)
+    @GetMapping("/user")
+    public List<UserResponse> findallUsers() {
+        return userService.findAllUsers();
+    }
+
+
+    /**
+     * ver mi perfil
+     */
+
+    /**
+     * put mi perfil
+     */
+
+    /**
+     * fav
+     */
+    @GetMapping("/fav")
+    @JsonView(viewUser.UserResponse.class)
+    public List<PostResponse> findAll(@AuthenticationPrincipal User user) {
+        return userService.findMyFavPost(user);
+    }
+
 
     /**
      * Banear a un usuario desde el punto de vista del administrador
@@ -83,7 +114,6 @@ public class UserController {
                                 loginRequest.getPassword()
                         )
                 );
-
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
