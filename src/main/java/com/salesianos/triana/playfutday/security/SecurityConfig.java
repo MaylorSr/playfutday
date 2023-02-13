@@ -73,9 +73,6 @@ public class SecurityConfig {
     }
 
 
-
-
-
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
@@ -90,10 +87,14 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/post/**").hasRole("USER")
+                .antMatchers("/post/").hasRole("USER")
+                .antMatchers("/post/user").hasRole("USER")
+                .antMatchers("/post/commentary/{id}").hasRole("USER")
+                .antMatchers("/post/user/{id}").hasRole("USER")
+                .antMatchers("/post/like/{id}").hasRole("USER")
+                .antMatchers("/post/**").hasRole("ADMIN")
                 .antMatchers("/auth/register/admin").hasRole("ADMIN")
                 .anyRequest().authenticated();
-
 
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);

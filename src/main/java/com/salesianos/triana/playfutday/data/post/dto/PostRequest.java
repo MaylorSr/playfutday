@@ -28,8 +28,5 @@ public class PostRequest {
     @NotBlank(message = "{createPostRequest.image.notBlank}")
     private String image;
 
-    @NotBlank(message = "{createPostRequest.userId.notBlank}")
-    private String user_id;
-
 
 }

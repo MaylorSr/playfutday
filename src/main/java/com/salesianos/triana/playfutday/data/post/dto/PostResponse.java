@@ -7,6 +7,7 @@ import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryResponse;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import com.salesianos.triana.playfutday.data.post.model.Post;
+import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import lombok.AllArgsConstructor;
@@ -14,7 +15,6 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -25,7 +25,9 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class PostResponse {
 
-    @JsonView({viewPost.PostAdmin.class, viewUser.UserInfo.class})
+    private static PostRepository postRepository;
+
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected Long id;
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected String tag;
@@ -39,7 +41,9 @@ public class PostResponse {
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected String author;
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
-    protected List<UserResponse> likesByAuthor;
+    protected List<String> likesByAuthor;
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
+    protected int countLikes;
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected List<CommentaryResponse> commentaries;
 
@@ -51,8 +55,9 @@ public class PostResponse {
                 .image(post.getImage())
                 .uploadDate(post.getUploadDate())
                 .author(post.getAuthor().getUsername())
-                .likesByAuthor(post.getLikes().stream().map(UserResponse::fromUser).toList())
-                .commentaries(post.getCommentaries().stream().map(CommentaryResponse::of).toList())
+                .likesByAuthor(post.getLikes() == null ? null : post.getLikes().stream().map(User::getUsername).toList())
+                .countLikes(post.getLikes() == null ? 0 : post.getLikes().size())
+                .commentaries(post.getCommentaries() == null ? null : post.getCommentaries().stream().map(CommentaryResponse::of).toList())
                 .build();
     }
 

@@ -29,6 +29,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@NamedEntityGraph(
+        name = "user_with_posts",
+        attributeNodes = @NamedAttributeNode(value = "myPost"))
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -59,7 +62,7 @@ public class User implements UserDetails {
 
     private String phone;
 
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "author")
     @Builder.Default
     private List<Post> myPost = new ArrayList<>();
 

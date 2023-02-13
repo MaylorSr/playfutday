@@ -2,6 +2,7 @@ package com.salesianos.triana.playfutday.data.user.service;
 
 
 import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
+import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
