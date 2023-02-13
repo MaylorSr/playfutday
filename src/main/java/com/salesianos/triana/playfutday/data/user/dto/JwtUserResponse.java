@@ -15,7 +15,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @AllArgsConstructor
 @SuperBuilder
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public class JwtUserResponse extends UserResponse {
 
     @JsonView(viewUser.UserInfo.class)
@@ -37,7 +37,9 @@ public class JwtUserResponse extends UserResponse {
         phone = (userResponse.getPhone());
         createdAt = (userResponse.getCreatedAt());
         enabled = (userResponse.isEnabled());
-        myPost = (userResponse.getMyPost() == null ? null : userResponse.getMyPost().stream().map(PostResponse::of).toList());
+/*
+        myPost = (userResponse.getMyPost().isEmpty() ? null : userResponse.getMyPost());
+*/
         roles = (userResponse.getRoles());
     }
 

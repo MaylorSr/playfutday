@@ -65,7 +65,7 @@ public class UserResponse {
                 .phone(user.getPhone())
                 .createdAt(user.getCreatedAt())
                 .enabled(user.isEnabled())
-                .myPost(user.getMyPost() == null ? null : user.getMyPost().stream().map(PostResponse::of).toList())
+                .myPost(user.getMyPost()  == null ? null : user.getMyPost().stream().map(PostResponse::of).toList())
                 .roles(user.getRoles())
                 .build();
     }

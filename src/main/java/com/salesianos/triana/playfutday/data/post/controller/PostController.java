@@ -14,10 +14,12 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequestMapping("/post")
@@ -76,6 +78,9 @@ public class PostController {
      * @return
      */
     @PostMapping("/")
+    /**
+     * @PreUthenticate(isAuthetica) eso hace que tenga que estar autenticado para poder hacer la peticion
+     */
     @JsonView(viewPost.PostResponse.class)
     public ResponseEntity<PostResponse> savePostByUser(@RequestBody PostRequest postRequest, @AuthenticationPrincipal User user) {
         PostResponse newPost = postService.createPostByUser(postRequest, user);
@@ -130,27 +135,36 @@ public class PostController {
     }
 
     /**
-     * Eliminar un post
+     * Eliminar un post del usuario
      */
 
- /*   @DeleteMapping("/user/{id}")
-    public ResponseEntity<?> delete(@PathVariable Long id, @AuthenticationPrincipal User user) {
-        if (postService.deletePostByUser(id, user)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.noContent().build();
-    }*/
+    @DeleteMapping("/user/{id}/user/{idU}")
+    public ResponseEntity<?> deletePostOfUser(@PathVariable Long id, @PathVariable UUID idU, @AuthenticationPrincipal User user) {
+        return postService.deletePostByUser(id, idU, user);
+    }
 
     /**
      * Eliminar un comentario desde el punto de vista de un administrador
      */
 
+    @DeleteMapping("/delete/commentary/{id}")
+    public ResponseEntity<?> deleteCommentaryByUserForAdmin(@PathVariable Long id) {
+        if (postService.deleteCommentary(id)) {
+            return ResponseEntity.ok().build();
+        }
+        return ResponseEntity.noContent().build();
+    }
+
+
     /**
-     * Banear a un administrador desde el punto de vista del administrador
+     * Banear a un usuario desde el punto de vista del administrador
      */
+
 
     /**
      * Añadir rol de administrador a un usuario cualquiera
      */
+
+
 
 }
