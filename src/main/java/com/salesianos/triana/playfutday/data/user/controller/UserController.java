@@ -72,8 +72,6 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(JwtUserResponse.of(user, token, refreshToken.getToken()));
-
-
     }
 
     @PostMapping("/refreshtoken")
@@ -96,7 +94,6 @@ public class UserController {
                 .orElseThrow(() -> new RefreshTokenException("Refresh token not found"));
 
     }
-
 
     @PutMapping("/user/changePassword")
     public ResponseEntity<UserResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,

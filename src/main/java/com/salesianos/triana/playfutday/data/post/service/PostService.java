@@ -17,6 +17,7 @@ import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -85,17 +86,29 @@ public class PostService {
     }
 
 
-    public boolean deletePostByUser(Long id, User user) {
-        if (user.getMyPost().contains(repo.findById(id))) {
-            user.getMyPost().remove(repo.findById(id));
-            return true;
+    public ResponseEntity<?> deletePostByUser(Long id, UUID idU, User user) {
+        if ((!userRepository.existsById(idU) || !repo.existsById(id)) || !userRepository.findById(idU).get().getMyPost().contains(repo.findById(id).get())) {
+            return ResponseEntity.badRequest().build();
         }
-        return false;
+        if (userRepository.findById(idU).get().getId().equals(user.getId()) || user.getRoles().contains("ADMIN")) {
+            repo.deleteById(id);
+            return ResponseEntity.noContent().build();
+        }
+        throw new RuntimeException();
 
     }
 
+    public boolean deleteCommentary(Long id) {
+        Optional<Commentary> commentaryOptional = repoCommentary.findById(id);
 
+        if (!commentaryOptional.isPresent()) {
+            throw new RuntimeException("The commentary do not exists");
+        }
+        Commentary c = repoCommentary.findById(id).get();
+        repoCommentary.deleteById(id);
+        return true;
 
+    }
 
 
 }
