@@ -17,7 +17,8 @@ public class UserRequest {
     @NotBlank(message = "{createUserRequest.userName.blank}")
     private String username;
 
-    @Email(message = "{createUserRequest.email.blank}")
+    @Email(message = "{createUserRequest.email.pattern}")
+    @NotBlank(message = "{createUserRequest.email.blank}")
     private String email;
     @NotBlank(message = "{createUserRequest.phone.blank}")
     private String phone;

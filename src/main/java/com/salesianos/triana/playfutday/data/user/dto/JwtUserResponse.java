@@ -37,7 +37,7 @@ public class JwtUserResponse extends UserResponse {
         phone = (userResponse.getPhone());
         createdAt = (userResponse.getCreatedAt());
         enabled = (userResponse.isEnabled());
-        myPost = (userResponse.getMyPost() == null ? null : userResponse.getMyPost().stream().map(PostResponse::of).toList());
+        myPost = (userResponse.getMyPost() == null ? null : userResponse.getMyPost());
         roles = (userResponse.getRoles());
     }
 

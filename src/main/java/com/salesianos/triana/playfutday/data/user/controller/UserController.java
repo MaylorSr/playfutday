@@ -42,8 +42,6 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
     }
 
-    // Más adelante podemos manejar la seguridad de acceso a esta petición
-
     @PostMapping("/auth/register/admin")
     public ResponseEntity<UserResponse> createUserWithAdminRole(@RequestBody UserRequest createUserRequest) {
         User user = userService.createUserWithAdminRole(createUserRequest);
@@ -55,8 +53,6 @@ public class UserController {
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
     public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
-
-
         Authentication authentication =
                 authManager.authenticate(
                         new UsernamePasswordAuthenticationToken(
@@ -65,15 +61,12 @@ public class UserController {
                         )
                 );
 
-        // Una vez realizada, la guardamos en el contexto de seguridad
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        // Devolvemos una respuesta adecuada
         String token = jwtProvider.generateToken(authentication);
 
         User user = (User) authentication.getPrincipal();
 
-        // Eliminamos el token (si existe) antes de crearlo, ya que cada usuario debería tener solamente un token de refresco simultáneo
         refreshTokenService.deleteByUser(user);
         RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
 
