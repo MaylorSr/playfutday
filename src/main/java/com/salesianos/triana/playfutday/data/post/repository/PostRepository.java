@@ -15,7 +15,9 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     List<Post> findByAuthor(User author);
 
-    @Query("SELECT p FROM Post p WHERE p.author.username = :username")
+    @Query("""
+            SELECT p FROM Post p JOIN User u ON (p.author.id  = u.id) where u.username =:username
+            """)
     List<Post> findAllPostOfOneUserByUserName(@Param("username") String username);
 
 

@@ -8,18 +8,15 @@ import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
 @Data
 @NoArgsConstructor
@@ -30,7 +27,7 @@ public class UserResponse {
 
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected UUID id;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected String username;
     @JsonView({viewUser.UserDetailsByAdmin.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
@@ -46,11 +43,11 @@ public class UserResponse {
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate birthday;
-    @JsonView({viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected boolean enabled;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected List<PostResponse> myPost;
-    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected Set<UserRole> roles;
 
     public static UserResponse fromUser(User user) {
@@ -65,7 +62,7 @@ public class UserResponse {
                 .phone(user.getPhone())
                 .createdAt(user.getCreatedAt())
                 .enabled(user.isEnabled())
-                .myPost(user.getMyPost()  == null ? null : user.getMyPost().stream().map(PostResponse::of).toList())
+                .myPost(user.getMyPost().isEmpty() ? null : user.getMyPost().stream().map(PostResponse::of).toList())
                 .roles(user.getRoles())
                 .build();
     }

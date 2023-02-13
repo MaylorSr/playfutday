@@ -49,6 +49,39 @@ public class UserService {
         return userRepository.findById(id);
     }
 
+    public UserResponse banUser(UUID id) {
+        Optional<User> user = Optional.of(userRepository.findById(id).get());
+
+        if (!user.isPresent()) {
+            throw new RuntimeException("The user with this id not exists");
+        }
+        if (user.get().isEnabled()) {
+            user.get().setEnabled(false);
+        } else {
+            user.get().setEnabled(true);
+        }
+
+        return UserResponse.fromUser(
+                userRepository.save(user.get())
+        );
+    }
+
+    public UserResponse addAdminRoleToUser(UUID id) {
+        Optional<User> user = Optional.of(userRepository.findById(id).get());
+        if (!user.isPresent()) {
+            throw new RuntimeException("The user with this id not exists");
+        }
+        if (user.get().getRoles().contains(UserRole.ADMIN)) {
+            user.get().getRoles().remove(UserRole.ADMIN);
+        } else {
+            user.get().getRoles().add(UserRole.ADMIN);
+        }
+        return UserResponse.fromUser(
+                userRepository.save(user.get())
+        );
+    }
+
+
     public Optional<User> findByUsername(String username) {
         return userRepository.findFirstByUsername(username);
     }

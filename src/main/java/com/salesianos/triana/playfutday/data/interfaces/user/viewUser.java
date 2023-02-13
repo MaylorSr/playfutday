@@ -14,4 +14,9 @@ public interface viewUser {
 
     }
 
+    static class UserChangeDate {
+
+    }
+
+
 }

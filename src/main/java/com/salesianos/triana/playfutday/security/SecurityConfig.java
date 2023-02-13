@@ -96,6 +96,8 @@ public class SecurityConfig {
                 .antMatchers("/post/**").hasRole("ADMIN")
                 .antMatchers("/post/delete/commentary/{id}").hasRole("ADMIN")
                 .antMatchers("/auth/register/admin").hasRole("ADMIN")
+                .antMatchers("/banUserByAdmin/{id}").hasRole("ADMIN")
+                .antMatchers("/changeRole/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
 

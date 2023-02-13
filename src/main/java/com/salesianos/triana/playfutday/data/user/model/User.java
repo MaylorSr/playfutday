@@ -68,14 +68,7 @@ public class User implements UserDetails {
 
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
-
-
-    /**
-     * IMPLEMENTAR UNA CLASE QUE SEA ROLES QUE TENGA UNA COLECCION DE SET DE USERROLES SET<USERROLE> O TENER UN
-     * ENUMSET<USERROLE>
-     * PASAR DE @ELEMENTCOLLECTION A SER ATTRIBUTECONVERTER<ROLES, STRING> EN LA BD SE GUARDARÁ COMO CON "ADMIN, MANAGER"
-     **/
-
+    
     @Builder.Default
     private boolean accountNonExpired = true;
     @Builder.Default

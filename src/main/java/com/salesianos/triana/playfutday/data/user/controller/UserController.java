@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.Optional;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -41,6 +42,28 @@ public class UserController {
 
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
     }
+
+    /**
+     * Banear a un usuario desde el punto de vista del administrador
+     */
+
+    @GetMapping("/banUserByAdmin/{id}")
+    @JsonView(viewUser.UserChangeDate.class)
+    public UserResponse banUserById(@PathVariable UUID id) {
+        return userService.banUser(id);
+    }
+
+    @GetMapping("/changeRole/{id}")
+    @JsonView(viewUser.UserChangeDate.class)
+    public UserResponse addRoleAdminToUser(@PathVariable UUID id) {
+        return userService.addAdminRoleToUser(id);
+    }
+
+
+    /**
+     * Añadir / Quitar rol de administrador a un usuario que lo tenga
+     */
+
 
     @PostMapping("/auth/register/admin")
     public ResponseEntity<UserResponse> createUserWithAdminRole(@RequestBody UserRequest createUserRequest) {

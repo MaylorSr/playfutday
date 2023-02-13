@@ -57,9 +57,9 @@ public class PostController {
      * Obtener lista de post por el nombre del usuario
      */
 
-    @GetMapping("/userbypost/{username}")
+    @GetMapping("/user/{username}")
     @JsonView({viewPost.PostResponse.class})
-    public ResponseEntity<List<PostResponse>> findAllPostofUser(@PathVariable String username) {
+    public ResponseEntity<List<PostResponse>> findPostOfUser(@PathVariable String username) {
         return buildResponseOfAList(repo.findAllPostOfOneUserByUserName(username));
     }
 
@@ -146,7 +146,6 @@ public class PostController {
     /**
      * Eliminar un comentario desde el punto de vista de un administrador
      */
-
     @DeleteMapping("/delete/commentary/{id}")
     public ResponseEntity<?> deleteCommentaryByUserForAdmin(@PathVariable Long id) {
         if (postService.deleteCommentary(id)) {
@@ -154,17 +153,6 @@ public class PostController {
         }
         return ResponseEntity.noContent().build();
     }
-
-
-    /**
-     * Banear a un usuario desde el punto de vista del administrador
-     */
-
-
-    /**
-     * Añadir rol de administrador a un usuario cualquiera
-     */
-
 
 
 }
