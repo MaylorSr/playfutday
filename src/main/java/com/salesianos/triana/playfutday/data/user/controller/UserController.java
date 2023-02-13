@@ -57,18 +57,15 @@ public class UserController {
 
 
     /**
-     * ver mi perfil
-     */
-
-    /**
      * put mi perfil
      */
 
-    /**
-     * fav
-     */
+
+
+
+
     @GetMapping("/fav")
-    @JsonView(viewUser.UserResponse.class)
+    @JsonView(viewPost.PostLikeMe.class)
     public List<PostResponse> findAll(@AuthenticationPrincipal User user) {
         return userService.findMyFavPost(user);
     }

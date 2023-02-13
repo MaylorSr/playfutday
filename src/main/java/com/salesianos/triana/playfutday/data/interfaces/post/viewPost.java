@@ -8,4 +8,7 @@ public interface viewPost {
 
     }
 
+    static class PostLikeMe {
+    }
+
 }

@@ -5,6 +5,7 @@ import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
+import com.salesianos.triana.playfutday.data.user.dto.EditInfoUserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
@@ -60,12 +61,8 @@ public class UserService {
 
 
     public List<PostResponse> findMyFavPost(User user) {
-
         return postRepository.findAllPostFavUser(user.getId()).stream().map(PostResponse::of).toList();
-
-
     }
-
 
     public UserResponse banUser(UUID id) {
         Optional<User> user = Optional.of(userRepository.findById(id).get());
