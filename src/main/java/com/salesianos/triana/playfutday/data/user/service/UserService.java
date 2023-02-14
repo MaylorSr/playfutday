@@ -108,7 +108,7 @@ public class UserService {
     public UserResponse addAdminRoleToUser(UUID id) {
         Optional<User> user = Optional.of(userRepository.findById(id).get());
         if (!user.isPresent()) {
-            throw new RuntimeException("The user with this id not exists");
+            throw new EntityNotFoundException("The user with this id not exists");
         }
         if (user.get().getRoles().contains(UserRole.ADMIN)) {
             user.get().getRoles().remove(UserRole.ADMIN);
