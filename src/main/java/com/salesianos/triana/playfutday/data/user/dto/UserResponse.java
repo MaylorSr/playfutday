@@ -45,7 +45,7 @@ public class UserResponse {
     protected LocalDate birthday;
     @JsonView({viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected boolean enabled;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class})
     protected List<PostResponse> myPost;
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected Set<UserRole> roles;
@@ -66,4 +66,6 @@ public class UserResponse {
                 .roles(user.getRoles())
                 .build();
     }
+
+
 }

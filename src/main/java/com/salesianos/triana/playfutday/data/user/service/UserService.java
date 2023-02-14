@@ -1,19 +1,22 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
-import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
-import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
-import com.salesianos.triana.playfutday.data.user.dto.EditInfoUserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
+import com.salesianos.triana.playfutday.search.page.PageResponse;
+import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
+import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.util.EnumSet;
 import java.util.List;
@@ -54,9 +57,12 @@ public class UserService {
     public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
     }
-
-    public List<UserResponse> findAllUsers() {
-        return userRepository.findAll().stream().map(UserResponse::fromUser).toList();
+    
+    public PageResponse<UserResponse> search(List<SearchCriteria> params, Pageable pageable) {
+        GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
+        Specification<User> spec = genericSpecificationBuilder.build();
+        Page<UserResponse> userResponsePage = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        return new PageResponse<>(userResponsePage);
     }
 
 

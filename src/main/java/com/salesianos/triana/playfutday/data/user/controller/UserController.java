@@ -1,6 +1,5 @@
 package com.salesianos.triana.playfutday.data.user.controller;
 
-
 import com.fasterxml.jackson.annotation.JsonView;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
@@ -8,12 +7,17 @@ import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
+import com.salesianos.triana.playfutday.search.page.PageResponse;
+import com.salesianos.triana.playfutday.search.util.SearchCriteria;
+import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshToken;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenException;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenRequest;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,19 +53,33 @@ public class UserController {
     /**
      * OBTENER TODOS LOS USUARIOS PARA ALVISTA DEL ADMIN
      */
+/*
     @JsonView(viewUser.UserDetailsByAdmin.class)
-    @GetMapping("/user")
+*/
+ /*   @GetMapping("/user")
     public List<UserResponse> findallUsers() {
         return userService.findAllUsers();
+    }*/
+    @GetMapping("/user")
+    public ResponseEntity<PageResponse<UserResponse>> findAllUsers(
+            @RequestParam(value = "s", defaultValue = "") String s,
+            @PageableDefault(size = 3, page = 0) Pageable pageable) {
+
+        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
+        PageResponse<UserResponse> res = userService.search(params, pageable);
+
+        if (res.getContent().isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(res);
+
     }
 
 
     /**
      * put mi perfil
      */
-
-
-
 
 
     @GetMapping("/fav")
