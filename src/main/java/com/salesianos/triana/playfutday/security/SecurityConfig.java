@@ -2,7 +2,6 @@ package com.salesianos.triana.playfutday.security;
 
 import com.salesianos.triana.playfutday.security.jwt.access.JwtAuthenticationFilter;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -20,6 +19,7 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+
 
 @Configuration
 @EnableWebSecurity
@@ -87,19 +87,8 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/post/").hasRole("USER")
-                .antMatchers("/post/user").hasRole("USER")
-                .antMatchers("/post/commentary/{id}").hasRole("USER")
-                .antMatchers("/post/user/{id}").hasRole("USER")
-                .antMatchers("/post/user/{id}/user/{idU}").hasRole("USER")
-                .antMatchers("/post/like/{id}").hasRole("USER")
-                .antMatchers("/fav").hasRole("USER")
-                .antMatchers("/post/**").hasRole("ADMIN")
-                .antMatchers("/post/delete/commentary/{id}").hasRole("ADMIN")
-                .antMatchers("/auth/register/admin").hasRole("ADMIN")
+                /* .antMatchers("/note/**").hasRole("USER")*/
                 .antMatchers("/banUserByAdmin/{id}").hasRole("ADMIN")
-                .antMatchers("/changeRole/{id}").hasRole("ADMIN")
-                .antMatchers(("/user")).hasRole("ADMIN")
                 .anyRequest().authenticated();
 
 
@@ -109,6 +98,7 @@ public class SecurityConfig {
         http.headers().frameOptions().disable();
 
         return http.build();
+
     }
 
     @Bean

@@ -8,15 +8,9 @@ import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
-import com.salesianos.triana.playfutday.search.util.SearchCriteria;
-import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
-import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshToken;
-import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenException;
-import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenRequest;
-import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenService;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -29,7 +23,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -40,7 +33,6 @@ public class UserController {
     private final UserService userService;
     private final AuthenticationManager authManager;
     private final JwtProvider jwtProvider;
-    private final RefreshTokenService refreshTokenService;
 
 
     @JsonView(viewUser.UserResponse.class)
@@ -87,16 +79,22 @@ public class UserController {
      * Banear a un usuario desde el punto de vista del administrador
      */
 
-    @GetMapping("/banUserByAdmin/{id}")
+    @PostMapping("/banUserByAdmin/{id}")
     @JsonView(viewUser.UserChangeDate.class)
-    public UserResponse banUserById(@PathVariable UUID id) {
-        return userService.banUser(id);
+    public ResponseEntity<UserResponse> banUserById(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.banUser(id));
     }
 
-    @GetMapping("/changeRole/{id}")
+    /**
+     * ELIMINAR UN USUARIO
+     *
+     * @param id
+     * @return
+     */
+    @PostMapping("/changeRole/{id}")
     @JsonView(viewUser.UserChangeDate.class)
-    public UserResponse addRoleAdminToUser(@PathVariable UUID id) {
-        return userService.addAdminRoleToUser(id);
+    public ResponseEntity<UserResponse> addRoleAdminToUser(@PathVariable UUID id) {
+        return ResponseEntity.status(HttpStatus.CREATED).body(userService.addAdminRoleToUser(id));
     }
 
     /**
@@ -128,33 +126,10 @@ public class UserController {
 
         User user = (User) authentication.getPrincipal();
 
-        refreshTokenService.deleteByUser(user);
-        RefreshToken refreshToken = refreshTokenService.createRefreshToken(user);
-
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(JwtUserResponse.of(user, token, refreshToken.getToken()));
+                .body(JwtUserResponse.of(user, token));
     }
 
-    @PostMapping("/refreshtoken")
-    public ResponseEntity<?> refreshToken(@RequestBody RefreshTokenRequest refreshTokenRequest) {
-        String refreshToken = refreshTokenRequest.getRefreshToken();
-
-        return refreshTokenService.findByToken(refreshToken)
-                .map(refreshTokenService::verify)
-                .map(RefreshToken::getUser)
-                .map(user -> {
-                    String token = jwtProvider.generateToken(user);
-                    refreshTokenService.deleteByUser(user);
-                    RefreshToken refreshToken2 = refreshTokenService.createRefreshToken(user);
-                    return ResponseEntity.status(HttpStatus.CREATED)
-                            .body(JwtUserResponse.builder()
-                                    .token(token)
-                                    .refreshToken(refreshToken2.getToken())
-                                    .build());
-                })
-                .orElseThrow(() -> new RefreshTokenException("Refresh token not found"));
-
-    }
 
     @PutMapping("/user/changePassword")
     public ResponseEntity<UserResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,

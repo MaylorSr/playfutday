@@ -5,18 +5,22 @@ import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.security.errorhandling.JwtTokenException;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.security.SignatureException;
 import lombok.extern.java.Log;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.stereotype.Service;
+import org.springframework.boot.autoconfigure.neo4j.Neo4jProperties;
 import org.springframework.security.core.Authentication;
+import org.springframework.stereotype.Service;
+
+
 
 import javax.annotation.PostConstruct;
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.Date;
 import java.util.UUID;
-
 
 @Log
 @Service
@@ -30,7 +34,9 @@ public class JwtProvider {
     private String jwtSecret;
 
     @Value("${jwt.duration}")
+    //private int jwtLifeInDays;
     private int jwtLifeInMinutes;
+
     private JwtParser jwtParser;
 
     private SecretKey secretKey;
@@ -88,14 +94,14 @@ public class JwtProvider {
         try {
             jwtParser.parseClaimsJws(token);
             return true;
-        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException |
-                 IllegalArgumentException ex) {
+        } catch (SignatureException | MalformedJwtException | ExpiredJwtException | UnsupportedJwtException | IllegalArgumentException ex) {
             log.info("Error con el token: " + ex.getMessage());
             throw new JwtTokenException(ex.getMessage());
         }
         //return false;
 
     }
+
 
 
 }

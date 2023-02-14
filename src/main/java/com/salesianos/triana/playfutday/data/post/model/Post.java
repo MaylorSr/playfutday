@@ -49,7 +49,7 @@ public class Post implements Serializable {
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_POST_USER"))
     private User author;
 
-    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(
             name = "post_likes",
             joinColumns = @JoinColumn(name = "post_id"),
@@ -59,7 +59,7 @@ public class Post implements Serializable {
     /**
      * hay que borrar el token de acceso para poder deslogear
      */
-    @OneToMany(mappedBy = "post", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "post", orphanRemoval = true)
     @Builder.Default
     private List<Commentary> commentaries = new ArrayList<>();
 }

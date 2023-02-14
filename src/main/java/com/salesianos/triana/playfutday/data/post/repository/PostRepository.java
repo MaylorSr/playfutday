@@ -27,6 +27,12 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             SELECT p FROM Post p JOIN p.likes l WHERE l.id =:id order by p.uploadDate desc
             """)
     Page<Post> findAllPostFavUser(@Param("id") UUID id, Pageable pageable);
+
+
+
+
+
+
 }
 
 

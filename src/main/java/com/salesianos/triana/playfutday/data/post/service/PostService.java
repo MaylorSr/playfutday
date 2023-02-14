@@ -8,24 +8,25 @@ import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.user.model.User;
+import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
+import com.salesianos.triana.playfutday.data.user.service.UserService;
+import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
+import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
+import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import javax.persistence.EntityNotFoundException;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -33,14 +34,17 @@ public class PostService {
     private final PostRepository repo;
 
     private final CommentaryRepository repoCommentary;
+
+    private final UserService userService;
     private final UserRepository userRepository;
 
+    public String postExists = "The list of post is empty";
 
     public PageResponse<PostResponse> findAllPost(String s, Pageable pageable) {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
         PageResponse<PostResponse> res = search(params, pageable);
         if (res.getContent().isEmpty()) {
-            throw new EntityNotFoundException("The list of post is empty");
+            throw new GlobalEntityListNotFounException("The list of post is empty in that page");
         }
         return res;
 
@@ -49,7 +53,7 @@ public class PostService {
     public PageResponse<PostResponse> findAllPostByUserName(String username, Pageable pageable) {
         PageResponse<PostResponse> res = pageablePost(username, pageable);
         if (res.getContent().isEmpty()) {
-            throw new EntityNotFoundException("The list of post is empty");
+            throw new GlobalEntityNotFounException(postExists);
         }
         return res;
     }
@@ -61,7 +65,6 @@ public class PostService {
                         (postOfOneUserByUserName.stream().toList(), pageable, postOfOneUserByUserName.getTotalPages()).map(PostResponse::of);
         return new PageResponse<>(postResponsePage);
     }
-
 
     public PageResponse<PostResponse> search(List<SearchCriteria> params, Pageable pageable) {
         GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
@@ -91,19 +94,15 @@ public class PostService {
 
 
     public PostResponse giveCommentByUser(Long id, User user, CommentaryRequest request) {
-        Commentary newCommentary = Commentary
-                .builder()
-                .message(request.getMessage())
-                .user(user)
-                .post(repo.findById(id).orElseThrow(() -> new EntityNotFoundException("The post not exists")))
-                .build();
-        return (
-                repo.findById(id).map(post -> {
-                    post.getCommentaries().add(newCommentary);
-                    repo.save(post);
-                    return PostResponse.of(post);
-                }).orElseThrow(() -> new EntityNotFoundException("The post not exists"))
-        );
+        return repo.findById(id).map(post -> {
+            post.getCommentaries().add(Commentary.builder()
+                    .post(post)
+                    .user(user)
+                    .message(request.getMessage())
+                    .build());
+            repo.save(post);
+            return PostResponse.of(post);
+        }).orElseThrow(() -> new GlobalEntityNotFounException(postExists));
     }
 
     public PostResponse giveLikeByUser(Long id, User user) {
@@ -120,21 +119,30 @@ public class PostService {
             }
             return PostResponse.of(repo.save(post));
         }
-        throw new EntityNotFoundException("The post not exists!");
+        throw new GlobalEntityNotFounException(postExists);
     }
 
 
     public ResponseEntity<?> deletePostByUser(Long id, UUID idU, User user) {
         if ((!userRepository.existsById(idU) || !repo.existsById(id))) {
-            throw new EntityNotFoundException("The commentary or post not exists!");
+            throw new GlobalEntityNotFounException("The post or User not exists!");
         } else if (!userRepository.findById(idU).get().getMyPost().contains(repo.findById(id).get())) {
-            throw new EntityNotFoundException("You do not have permission to realice that!");
-        } else if (userRepository.findById(idU).get().getId().equals(user.getId()) || user.getRoles().contains("ADMIN")) {
-            repo.deleteById(id);
+            throw new GlobalEntityNotFounException("You do not have this post in your posts!");
+        } else if (userRepository.findById(idU).get().getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
+            Post post = repo.findById(id).get();
+            if (post.getCommentaries().isEmpty()) {
+                post.getCommentaries().forEach(comment -> repoCommentary.delete(comment));
+                repo.save(post);
+            }
+            if (post.getLikes().isEmpty()) {
+                post.getLikes().forEach(user1 -> this.giveLikeByUser(id, user1));
+                repo.save(post);
+            }
+            repo.delete(post);
             return ResponseEntity.noContent().build();
+        } else {
+            throw new GlobalEntityNotFounException("Not found permission for that");
         }
-        throw new EntityNotFoundException();
-
     }
 
     public ResponseEntity<?> deleteCommentary(Long id) {
@@ -143,10 +151,8 @@ public class PostService {
             repoCommentary.deleteById(id);
             return ResponseEntity.noContent().build();
         }
-        throw new EntityNotFoundException("The commentary do not exists");
+        throw new GlobalEntityNotFounException("The commentary not exists");
 
 
     }
-
-
 }
