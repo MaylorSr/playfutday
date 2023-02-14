@@ -1,20 +1,28 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
-import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
-import com.salesianos.triana.playfutday.data.user.dto.EditInfoUserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
+import com.salesianos.triana.playfutday.search.page.PageResponse;
+import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
+import com.salesianos.triana.playfutday.search.util.SearchCriteria;
+import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.EntityNotFoundException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,34 +55,50 @@ public class UserService {
         return createUser(createUserRequest, EnumSet.of(UserRole.ADMIN));
     }
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+    public PageResponse<UserResponse> findAll(String s, Pageable pageable) {
+        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
+        PageResponse<UserResponse> res = search(params, pageable);
+        if (res.getContent().isEmpty()) {
+            throw new EntityNotFoundException("The list of users is empty in that page");
+        }
+        return res;
     }
+
+
+    public PageResponse<UserResponse> search(List<SearchCriteria> params, Pageable pageable) {
+        GenericSpecificationBuilder genericSpecificationBuilder = new GenericSpecificationBuilder(params);
+        Specification<User> spec = genericSpecificationBuilder.build();
+        Page<UserResponse> userResponsePage = userRepository.findAll(spec, pageable).map(UserResponse::fromUser);
+        return new PageResponse<>(userResponsePage);
+    }
+
 
     public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
     }
 
-    public List<UserResponse> findAllUsers() {
-        return userRepository.findAll().stream().map(UserResponse::fromUser).toList();
+    public PageResponse<PostResponse> findMyFavPost(User user, Pageable pageable) {
+        PageResponse<PostResponse> res = pageablePost(pageable, user);
+        if (res.getContent().isEmpty()) {
+            throw new EntityNotFoundException("The list of post is empty in that page");
+        }
+        return res;
     }
 
 
-    public List<PostResponse> findMyFavPost(User user) {
-        return postRepository.findAllPostFavUser(user.getId()).stream().map(PostResponse::of).toList();
+    public PageResponse<PostResponse> pageablePost(Pageable pageable, User user) {
+        Page<Post> postListFav = postRepository.findAllPostFavUser(user.getId(), pageable);
+        Page<PostResponse> postResponsePage =
+                new PageImpl<>
+                        (postListFav.stream().toList(), pageable, postListFav.getTotalPages()).map(PostResponse::of);
+        return new PageResponse<>(postResponsePage);
     }
+
 
     public UserResponse banUser(UUID id) {
         Optional<User> user = Optional.of(userRepository.findById(id).get());
 
-        if (!user.isPresent()) {
-            throw new RuntimeException("The user with this id not exists");
-        }
-        if (user.get().isEnabled()) {
-            user.get().setEnabled(false);
-        } else {
-            user.get().setEnabled(true);
-        }
+        user.get().setEnabled(!user.get().isEnabled());
 
         return UserResponse.fromUser(
                 userRepository.save(user.get())

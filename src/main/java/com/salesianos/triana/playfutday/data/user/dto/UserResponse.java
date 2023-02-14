@@ -32,20 +32,20 @@ public class UserResponse {
     @JsonView({viewUser.UserDetailsByAdmin.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     protected LocalDateTime createdAt;
-    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserInfo.class})
     protected String email;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
     protected String avatar;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class})
     protected String biography;
-    @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserInfo.class})
     protected String phone;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDate birthday;
     @JsonView({viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected boolean enabled;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class})
     protected List<PostResponse> myPost;
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected Set<UserRole> roles;
@@ -66,4 +66,6 @@ public class UserResponse {
                 .roles(user.getRoles())
                 .build();
     }
+
+
 }

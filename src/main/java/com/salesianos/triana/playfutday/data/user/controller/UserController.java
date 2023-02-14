@@ -1,6 +1,5 @@
 package com.salesianos.triana.playfutday.data.user.controller;
 
-
 import com.fasterxml.jackson.annotation.JsonView;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
@@ -8,12 +7,18 @@ import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
+import com.salesianos.triana.playfutday.search.page.PageResponse;
+import com.salesianos.triana.playfutday.search.util.SearchCriteria;
+import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshToken;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenException;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenRequest;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -49,10 +54,19 @@ public class UserController {
     /**
      * OBTENER TODOS LOS USUARIOS PARA ALVISTA DEL ADMIN
      */
+/*
     @JsonView(viewUser.UserDetailsByAdmin.class)
-    @GetMapping("/user")
+*/
+ /*   @GetMapping("/user")
     public List<UserResponse> findallUsers() {
         return userService.findAllUsers();
+    }*/
+    @GetMapping("/user")
+    @JsonView(viewUser.UserDetailsByAdmin.class)
+    public PageResponse<UserResponse> findAllUsers(
+            @RequestParam(value = "s", defaultValue = "") String s,
+            @PageableDefault(size = 3, page = 0) Pageable pageable) {
+        return userService.findAll(s, pageable);
     }
 
 
@@ -61,13 +75,11 @@ public class UserController {
      */
 
 
-
-
-
     @GetMapping("/fav")
     @JsonView(viewPost.PostLikeMe.class)
-    public List<PostResponse> findAll(@AuthenticationPrincipal User user) {
-        return userService.findMyFavPost(user);
+    public PageResponse<PostResponse> findAll(
+            @PageableDefault(size = 5, page = 0) Pageable pageable, @AuthenticationPrincipal User user) {
+        return userService.findMyFavPost(user, pageable);
     }
 
 
@@ -86,7 +98,6 @@ public class UserController {
     public UserResponse addRoleAdminToUser(@PathVariable UUID id) {
         return userService.addAdminRoleToUser(id);
     }
-
 
     /**
      * Añadir / Quitar rol de administrador a un usuario que lo tenga
