@@ -28,7 +28,7 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
         return buildApiError(ex.getMessage(), request, status);
     }
 
-    @ExceptionHandler(/*{GlobalEntityNotFounException.class, GlobalEntityListNotFoundException.class}*/)
+    @ExceptionHandler({EntityNotFoundException.class})
     public ResponseEntity<?> handleNotFoundException(EntityNotFoundException exception, WebRequest request) {
         return buildApiError(exception.getMessage(), request, HttpStatus.NOT_FOUND);
     }

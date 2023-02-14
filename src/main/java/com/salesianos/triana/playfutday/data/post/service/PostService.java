@@ -104,7 +104,6 @@ public class PostService {
                     return PostResponse.of(post);
                 }).orElseThrow(() -> new EntityNotFoundException("The post not exists"))
         );
-
     }
 
     public PostResponse giveLikeByUser(Long id, User user) {
