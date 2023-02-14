@@ -9,8 +9,12 @@ import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
 import com.salesianos.triana.playfutday.data.user.model.User;
+import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
+import com.salesianos.triana.playfutday.search.page.PageResponse;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -25,10 +29,8 @@ import java.util.UUID;
 @RequestMapping("/post")
 @RequiredArgsConstructor
 public class PostController {
-    private final UserService userService;
     private final PostService postService;
 
-    private final PostRepository repo;
 
     /**
      * put
@@ -41,8 +43,10 @@ public class PostController {
      */
     @GetMapping("/")
     @JsonView({viewPost.PostResponse.class})
-    public List<PostResponse> findAllPost() {
-        return postService.findAllPost();
+    public PageResponse<PostResponse> findAllPost(
+            @RequestParam(value = "s", defaultValue = "") String s,
+            @PageableDefault(size = 5, page = 0) Pageable pageable) {
+        return postService.findAllPost(s, pageable);
     }
 
     /**
@@ -53,8 +57,8 @@ public class PostController {
      */
     @GetMapping("/user")
     @JsonView(viewPost.PostResponse.class)
-    public ResponseEntity<List<PostResponse>> getAll(@AuthenticationPrincipal User user) {
-        return buildResponseOfAList(repo.findByAuthor(user));
+    public PageResponse<PostResponse> getAll(@PageableDefault(size = 3, page = 0) Pageable pageable, @AuthenticationPrincipal User user) {
+        return postService.findAllPostByUserName(user.getUsername(), pageable);
     }
 
     /**
@@ -63,16 +67,10 @@ public class PostController {
 
     @GetMapping("/user/{username}")
     @JsonView({viewPost.PostResponse.class})
-    public ResponseEntity<List<PostResponse>> findPostOfUser(@PathVariable String username) {
-        return buildResponseOfAList(repo.findAllPostOfOneUserByUserName(username));
+    public PageResponse<PostResponse> findPostOfUser(@PageableDefault(size = 3, page = 0) Pageable pageable, @PathVariable String username) {
+        return postService.findAllPostByUserName(username, pageable);
     }
 
-    private ResponseEntity<List<PostResponse>> buildResponseOfAList(List<Post> list) {
-        if (list.isEmpty())
-            return ResponseEntity.notFound().build();
-        else
-            return ResponseEntity.ok(list.stream().map(PostResponse::of).toList());
-    }
 
     /**
      * Crea un post
@@ -152,10 +150,7 @@ public class PostController {
      */
     @DeleteMapping("/delete/commentary/{id}")
     public ResponseEntity<?> deleteCommentaryByUserForAdmin(@PathVariable Long id) {
-        if (postService.deleteCommentary(id)) {
-            return ResponseEntity.ok().build();
-        }
-        return ResponseEntity.noContent().build();
+        return postService.deleteCommentary(id);
     }
 
 

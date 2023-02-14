@@ -16,6 +16,7 @@ import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenExcepti
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenRequest;
 import com.salesianos.triana.playfutday.security.jwt.refresh.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
@@ -61,19 +62,11 @@ public class UserController {
         return userService.findAllUsers();
     }*/
     @GetMapping("/user")
-    public ResponseEntity<PageResponse<UserResponse>> findAllUsers(
+    @JsonView(viewUser.UserDetailsByAdmin.class)
+    public PageResponse<UserResponse> findAllUsers(
             @RequestParam(value = "s", defaultValue = "") String s,
             @PageableDefault(size = 3, page = 0) Pageable pageable) {
-
-        List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
-        PageResponse<UserResponse> res = userService.search(params, pageable);
-
-        if (res.getContent().isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-
-        return ResponseEntity.ok(res);
-
+        return userService.findAll(s, pageable);
     }
 
 
@@ -84,8 +77,9 @@ public class UserController {
 
     @GetMapping("/fav")
     @JsonView(viewPost.PostLikeMe.class)
-    public List<PostResponse> findAll(@AuthenticationPrincipal User user) {
-        return userService.findMyFavPost(user);
+    public PageResponse<PostResponse> findAll(
+            @PageableDefault(size = 5, page = 0) Pageable pageable, @AuthenticationPrincipal User user) {
+        return userService.findMyFavPost(user, pageable);
     }
 
 
@@ -104,7 +98,6 @@ public class UserController {
     public UserResponse addRoleAdminToUser(@PathVariable UUID id) {
         return userService.addAdminRoleToUser(id);
     }
-
 
     /**
      * Añadir / Quitar rol de administrador a un usuario que lo tenga

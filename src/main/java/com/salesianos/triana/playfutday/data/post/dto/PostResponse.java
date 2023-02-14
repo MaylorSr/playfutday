@@ -27,24 +27,24 @@ public class PostResponse {
 
     private static PostRepository postRepository;
 
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected Long id;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewPost.PostLikeMe.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected String tag;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewPost.PostLikeMe.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected String description;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewPost.PostLikeMe.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected String image;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     protected LocalDateTime uploadDate;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewPost.PostLikeMe.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected String author;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected List<String> likesByAuthor;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewPost.PostLikeMe.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected int countLikes;
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected List<CommentaryResponse> commentaries;
 
     public static PostResponse of(Post post) {
