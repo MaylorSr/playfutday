@@ -9,6 +9,8 @@ import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
+import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
+import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
@@ -22,7 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.EntityNotFoundException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +48,21 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    public ResponseEntity<?> deleteUser(UUID idU, User user) {
+        Optional<User> optionalUser = userRepository.findById(idU);
+
+        if (optionalUser.isPresent()) {
+            User opUser = optionalUser.get();
+            if (opUser.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
+                this.deleteById(idU);
+                return ResponseEntity.noContent().build();
+            }
+            throw new GlobalEntityNotFounException("You not have permission for delete that post!");
+        }
+        throw new GlobalEntityNotFounException("The user or the post not found");
+
+    }
+
     public User createUserWithUserRole(UserRequest createUserRequest) {
         return createUser(createUserRequest, EnumSet.of(UserRole.USER));
     }
@@ -59,7 +75,7 @@ public class UserService {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
         PageResponse<UserResponse> res = search(params, pageable);
         if (res.getContent().isEmpty()) {
-            throw new EntityNotFoundException("The list of users is empty in that page");
+            throw new GlobalEntityListNotFounException("The list of users is empty in that page");
         }
         return res;
     }
@@ -80,7 +96,7 @@ public class UserService {
     public PageResponse<PostResponse> findMyFavPost(User user, Pageable pageable) {
         PageResponse<PostResponse> res = pageablePost(pageable, user);
         if (res.getContent().isEmpty()) {
-            throw new EntityNotFoundException("The list of post is empty in that page");
+            throw new GlobalEntityListNotFounException("The list of post that you put is empty in that page");
         }
         return res;
     }
@@ -96,28 +112,27 @@ public class UserService {
 
 
     public UserResponse banUser(UUID id) {
-        Optional<User> user = Optional.of(userRepository.findById(id).get());
+        return userRepository.findById(id).map(user1 -> {
+            user1.setEnabled(!user1.isEnabled());
+            return UserResponse.fromUser(
+                    userRepository.save(user1)
+            );
+        }).orElseThrow(() -> new GlobalEntityNotFounException("The user with id not exists"));
 
-        user.get().setEnabled(!user.get().isEnabled());
 
-        return UserResponse.fromUser(
-                userRepository.save(user.get())
-        );
     }
 
     public UserResponse addAdminRoleToUser(UUID id) {
-        Optional<User> user = Optional.of(userRepository.findById(id).get());
-        if (!user.isPresent()) {
-            throw new RuntimeException("The user with this id not exists");
-        }
-        if (user.get().getRoles().contains(UserRole.ADMIN)) {
-            user.get().getRoles().remove(UserRole.ADMIN);
-        } else {
-            user.get().getRoles().add(UserRole.ADMIN);
-        }
-        return UserResponse.fromUser(
-                userRepository.save(user.get())
-        );
+
+        return userRepository.findById(id).map(old -> {
+            if (old.getRoles().contains(UserRole.ADMIN)) {
+                old.getRoles().remove(UserRole.ADMIN);
+            } else {
+                old.getRoles().add(UserRole.ADMIN);
+            }
+            userRepository.save(old);
+            return UserResponse.fromUser(old);
+        }).orElseThrow(() -> new GlobalEntityNotFounException("The user with that id not exists!"));
     }
 
 
@@ -158,6 +173,15 @@ public class UserService {
 
     public boolean passwordMatch(User user, String clearPassword) {
         return passwordEncoder.matches(clearPassword, user.getPassword());
+    }
+
+
+    public boolean userExistsEmail(String s) {
+        return userRepository.existsByEmailIgnoreCase(s);
+    }
+
+    public boolean userPhoneUnique(String s) {
+        return userRepository.existsByPhoneIgnoreCase(s);
     }
 
 

@@ -5,11 +5,8 @@ import com.salesianos.triana.playfutday.data.post.model.Post;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.ToString;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Type;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.data.annotation.CreatedDate;
 
 import javax.validation.constraints.NotBlank;
 

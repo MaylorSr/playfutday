@@ -2,10 +2,16 @@ package com.salesianos.triana.playfutday.error;
 
 import com.salesianos.triana.playfutday.error.model.impl.ApiErrorImpl;
 import com.salesianos.triana.playfutday.error.model.impl.ApiValidationSubError;
+import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
+import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
+import com.salesianos.triana.playfutday.security.errorhandling.JwtTokenException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.AccessDeniedException;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.validation.ObjectError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
@@ -28,7 +34,7 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
         return buildApiError(ex.getMessage(), request, status);
     }
 
-    @ExceptionHandler(/*{GlobalEntityNotFounException.class, GlobalEntityListNotFoundException.class}*/)
+    @ExceptionHandler({GlobalEntityNotFounException.class, GlobalEntityListNotFounException.class})
     public ResponseEntity<?> handleNotFoundException(EntityNotFoundException exception, WebRequest request) {
         return buildApiError(exception.getMessage(), request, HttpStatus.NOT_FOUND);
     }
@@ -75,6 +81,7 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
                 );
     }
 
+
     private final ResponseEntity<Object> buildApiErrorWithSubErrors(String message, WebRequest request, HttpStatus status, List<ObjectError> subErrors) {
         return ResponseEntity
                 .status(status)
@@ -91,4 +98,33 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
                 );
 
     }
+
+
+    @ExceptionHandler({org.springframework.security.core.AuthenticationException.class})
+    public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
+        return (buildApiError("The user is not authenticated", request, HttpStatus.UNAUTHORIZED));
+    }
+
+    @ExceptionHandler({org.springframework.security.access.AccessDeniedException.class})
+    public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
+        return (buildApiError("You do not have permission for this request!", request, HttpStatus.FORBIDDEN));
+    }
+
+
+
+    @ExceptionHandler({JwtTokenException.class})
+    public ResponseEntity<?> handleTokenException(JwtTokenException ex, WebRequest request) {
+        return (buildApiError("The token had expired", request, HttpStatus.FORBIDDEN));
+    }
+
+    @ExceptionHandler({UsernameNotFoundException.class})
+    public ResponseEntity<?> handleUserNotExistsException(UsernameNotFoundException ex, WebRequest request) {
+        return (buildApiError(
+                "Username not found",
+                request,
+                HttpStatus.UNAUTHORIZED
+        ));
+    }
+
+
 }

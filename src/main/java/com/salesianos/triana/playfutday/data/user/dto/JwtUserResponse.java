@@ -38,17 +38,13 @@ public class JwtUserResponse extends UserResponse {
         createdAt = (userResponse.getCreatedAt());
         enabled = (userResponse.isEnabled());
         myPost = (userResponse.getMyPost() == null ? null : userResponse.getMyPost());
-/*
-        myPost = (userResponse.getMyPost().isEmpty() ? null : userResponse.getMyPost());
-*/
         roles = (userResponse.getRoles());
     }
 
-    public static JwtUserResponse of(User user, String token, String refreshToken) {
+    public static JwtUserResponse of(User user, String token) {
 
         JwtUserResponse result = new JwtUserResponse(UserResponse.fromUser(user));
         result.setToken(token);
-        result.setRefreshToken(refreshToken);
         return result;
     }
 

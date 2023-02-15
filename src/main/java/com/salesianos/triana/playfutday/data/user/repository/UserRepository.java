@@ -14,7 +14,15 @@ public interface UserRepository extends JpaRepository<User, UUID>, JpaSpecificat
 
     Optional<User> findFirstByUsername(String username);
 
-    @EntityGraph(value = "user_with_posts", type = EntityGraph.EntityGraphType.FETCH)
-    Optional<User> findByUsername(String username);
+    /*
+
+        @EntityGraph(value = "user_with_posts", type = EntityGraph.EntityGraphType.FETCH)
+        Optional<User> findByUsername(String username);
+    */
+
+    boolean existsByEmailIgnoreCase(String s);
+
+    boolean existsByPhoneIgnoreCase(String s);
 
 }
+

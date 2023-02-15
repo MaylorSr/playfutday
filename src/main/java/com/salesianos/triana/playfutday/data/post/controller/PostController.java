@@ -5,12 +5,8 @@ import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryRequest;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.post.dto.PostRequest;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
-import com.salesianos.triana.playfutday.data.post.model.Post;
-import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
 import com.salesianos.triana.playfutday.data.user.model.User;
-import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
-import com.salesianos.triana.playfutday.data.user.service.UserService;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
@@ -18,11 +14,10 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -30,11 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
-
-    /**
-     * put
-     */
 
     /**
      * Muestra todos los post de los usuarios
@@ -84,7 +74,7 @@ public class PostController {
      * @PreUthenticate(isAuthetica) eso hace que tenga que estar autenticado para poder hacer la peticion
      */
     @JsonView(viewPost.PostResponse.class)
-    public ResponseEntity<PostResponse> savePostByUser(@RequestBody PostRequest postRequest, @AuthenticationPrincipal User user) {
+    public ResponseEntity<PostResponse> savePostByUser(@Valid @RequestBody PostRequest postRequest, @AuthenticationPrincipal User user) {
         PostResponse newPost = postService.createPostByUser(postRequest, user);
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -125,7 +115,7 @@ public class PostController {
      */
     @PostMapping("/commentary/{id}")
     @JsonView(viewPost.PostResponse.class)
-    public ResponseEntity<PostResponse> saveCommentaryByUser(@RequestBody CommentaryRequest request, @PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<PostResponse> saveCommentaryByUser(@Valid @RequestBody CommentaryRequest request, @PathVariable Long id, @AuthenticationPrincipal User user) {
         PostResponse newCommentaryInPost = postService.giveCommentByUser(id, user, request);
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()

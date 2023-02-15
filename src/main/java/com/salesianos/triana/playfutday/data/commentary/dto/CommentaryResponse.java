@@ -38,7 +38,7 @@ public class CommentaryResponse {
         return CommentaryResponse.builder()
                 .id(commentary.getId())
                 .message(commentary.getMessage())
-                .authorName(commentary.getUser().getUsername())
+                .authorName(commentary.getAuthor())
                 .uploadCommentary(commentary.getUpdateCommentary())
                 .build();
     }
