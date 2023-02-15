@@ -26,6 +26,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 import javax.persistence.EntityNotFoundException;
+import javax.persistence.PreRemove;
 import java.nio.file.AccessDeniedException;
 import java.util.EnumSet;
 import java.util.List;
@@ -49,6 +50,21 @@ public class UserService {
                 .roles(roles)
                 .build();
         return userRepository.save(user);
+    }
+
+    public ResponseEntity<?> deleteUser(UUID idU, User user) {
+        Optional<User> optionalUser = userRepository.findById(idU);
+
+        if (optionalUser.isPresent()) {
+            User opUser = optionalUser.get();
+            if (opUser.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
+                this.deleteById(idU);
+                return ResponseEntity.noContent().build();
+            }
+            throw new GlobalEntityNotFounException("You not have permission for delete that post!");
+        }
+        throw new GlobalEntityNotFounException("The user or the post not found");
+
     }
 
     public User createUserWithUserRole(UserRequest createUserRequest) {

@@ -62,7 +62,8 @@ public class User implements UserDetails {
 
     private String phone;
 
-    @OneToMany(mappedBy = "author")
+
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
     @Builder.Default
     private List<Post> myPost = new ArrayList<>();
 

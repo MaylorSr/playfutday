@@ -23,6 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
+import javax.persistence.PreRemove;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -87,10 +88,14 @@ public class UserController {
 
     /**
      * ELIMINAR UN USUARIO
-     *
-     * @param id
-     * @return
      */
+
+    @DeleteMapping("/user/{idU}")
+    public ResponseEntity<?> deleteUser(@PathVariable UUID idU, @AuthenticationPrincipal User user) {
+        return userService.deleteUser(idU, user);
+    }
+
+
     @PostMapping("/changeRole/{id}")
     @JsonView(viewUser.UserChangeDate.class)
     public ResponseEntity<UserResponse> addRoleAdminToUser(@PathVariable UUID id) {

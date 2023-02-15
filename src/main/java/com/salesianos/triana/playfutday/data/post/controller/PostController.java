@@ -5,25 +5,18 @@ import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryRequest;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.post.dto.PostRequest;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
-import com.salesianos.triana.playfutday.data.post.model.Post;
-import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
 import com.salesianos.triana.playfutday.data.user.model.User;
-import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
-import com.salesianos.triana.playfutday.data.user.service.UserService;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.handler.UserRoleAuthorizationInterceptor;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
-import java.util.List;
 import java.util.UUID;
 
 @RestController

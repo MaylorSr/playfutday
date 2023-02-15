@@ -87,10 +87,9 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                /* .antMatchers("/note/**").hasRole("USER")*/
+                .antMatchers("/user/{idU}", "/user/{id}/user/{idU}").hasRole("USER")
                 .antMatchers("/banUserByAdmin/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated();
-
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 

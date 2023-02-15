@@ -17,7 +17,6 @@ import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
-import lombok.Builder;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -26,6 +25,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
+import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service
@@ -49,6 +49,7 @@ public class PostService {
         return res;
 
     }
+
 
     public PageResponse<PostResponse> findAllPostByUserName(String username, Pageable pageable) {
         PageResponse<PostResponse> res = pageablePost(username, pageable);
@@ -97,7 +98,7 @@ public class PostService {
         return repo.findById(id).map(post -> {
             post.getCommentaries().add(Commentary.builder()
                     .post(post)
-                    .user(user)
+                    .author(user.getUsername())
                     .message(request.getMessage())
                     .build());
             repo.save(post);
@@ -124,25 +125,28 @@ public class PostService {
 
 
     public ResponseEntity<?> deletePostByUser(Long id, UUID idU, User user) {
-        if ((!userRepository.existsById(idU) || !repo.existsById(id))) {
-            throw new GlobalEntityNotFounException("The post or User not exists!");
-        } else if (!userRepository.findById(idU).get().getMyPost().contains(repo.findById(id).get())) {
-            throw new GlobalEntityNotFounException("You do not have this post in your posts!");
-        } else if (userRepository.findById(idU).get().getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
-            Post post = repo.findById(id).get();
-            if (post.getCommentaries().isEmpty()) {
-                post.getCommentaries().forEach(comment -> repoCommentary.delete(comment));
-                repo.save(post);
+        Optional<User> optionalUser = userRepository.findById(idU);
+        Optional<Post> optionalPost = repo.findById(id);
+
+        if (optionalUser.isPresent() && optionalPost.isPresent()) {
+            User userWithPost = optionalUser.get();
+            Post postToDelete = optionalPost.get();
+            if (userWithPost.getMyPost().contains(postToDelete)) {
+                if (userWithPost.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
+                    userWithPost.getMyPost().remove(postToDelete);
+                    repo.delete(postToDelete);
+                    userRepository.save(userWithPost);
+                    return ResponseEntity.noContent().build();
+                }
+                throw new GlobalEntityNotFounException("You not have permission for delete that post!");
+
             }
-            if (post.getLikes().isEmpty()) {
-                post.getLikes().forEach(user1 -> this.giveLikeByUser(id, user1));
-                repo.save(post);
-            }
-            repo.delete(post);
-            return ResponseEntity.noContent().build();
-        } else {
-            throw new GlobalEntityNotFounException("Not found permission for that");
+            throw new GlobalEntityNotFounException("You not content this post!");
+
+
         }
+
+        throw new GlobalEntityNotFounException("The user or the post not found");
     }
 
     public ResponseEntity<?> deleteCommentary(Long id) {
@@ -152,7 +156,5 @@ public class PostService {
             return ResponseEntity.noContent().build();
         }
         throw new GlobalEntityNotFounException("The commentary not exists");
-
-
     }
 }
