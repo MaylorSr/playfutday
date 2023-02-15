@@ -4,6 +4,7 @@ import com.salesianos.triana.playfutday.error.model.impl.ApiErrorImpl;
 import com.salesianos.triana.playfutday.error.model.impl.ApiValidationSubError;
 import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
 import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
+import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.security.errorhandling.JwtTokenException;
 import org.hibernate.validator.internal.engine.path.PathImpl;
 import org.springframework.http.HttpHeaders;
@@ -105,11 +106,10 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
         return (buildApiError("The user is not authenticated", request, HttpStatus.UNAUTHORIZED));
     }
 
-    @ExceptionHandler({org.springframework.security.access.AccessDeniedException.class})
+    @ExceptionHandler({org.springframework.security.access.AccessDeniedException.class, NotPermission.class})
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {
         return (buildApiError("You do not have permission for this request!", request, HttpStatus.FORBIDDEN));
     }
-
 
 
     @ExceptionHandler({JwtTokenException.class})

@@ -7,6 +7,7 @@ import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
+import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 
@@ -91,7 +92,7 @@ public class UserController {
      */
 
     @DeleteMapping("/user/{idU}")
-    public ResponseEntity<?> deleteUser(@PathVariable UUID idU, @AuthenticationPrincipal User user) {
+    public ResponseEntity<?> deleteUser(@PathVariable UUID idU, @AuthenticationPrincipal User user)  {
         return userService.deleteUser(idU, user);
     }
 

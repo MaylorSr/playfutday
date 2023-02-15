@@ -13,11 +13,14 @@ import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
 import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
 import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
+import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
@@ -50,14 +53,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
-    public ResponseEntity<?> deleteUser(UUID idU, User user) {
+
+    public ResponseEntity<?> deleteUser(UUID idU, User user) throws NotPermission {
         Optional<User> optionalUser = userRepository.findById(idU);
         if (optionalUser.isPresent()) {
             if (optionalUser.get().getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
                 userRepository.delete(optionalUser.get());
+                return ResponseEntity.noContent().build();
+            }else {
+                throw new NotPermission();
             }
-            return ResponseEntity.noContent().build();
-
         }
         throw new GlobalEntityNotFounException("User not found with that id");
     }
