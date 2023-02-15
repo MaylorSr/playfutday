@@ -21,7 +21,7 @@ public @interface StrongPassword {
 
     int min() default 8;
 
-    int max() default Integer.MAX_VALUE;
+    int max() default 15;
 
     boolean hasUpper() default true;
 

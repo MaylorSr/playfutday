@@ -13,8 +13,8 @@ import javax.validation.constraints.NotBlank;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-/*@FieldsValueMatch(field = "password", fieldMatch = "verifyPassword",
-        message = "{createUserRequest.password.match}")*/
+@FieldsValueMatch(field = "password", fieldMatch = "verifyPassword",
+        message = "{createUserRequest.password.match}")
 public class UserRequest {
 
     @NotBlank(message = "{createUserRequest.userName.blank}")
@@ -27,11 +27,9 @@ public class UserRequest {
     @PhoneStructure()
     @UniquePhone(message = "{createUserRequest.phone.exists}")
     private String phone;
-/*    @StrongPassword()
-    @NotBlank(message = "{createUserRequest.password.blank}")*/
+    @StrongPassword
+    @NotBlank(message = "{createUserRequest.password.blank}")
     private String password;
-/*    @StrongPassword()
-    @NotBlank(message = "{createUserRequest.password.blank}")*/
     private String verifyPassword;
 
 

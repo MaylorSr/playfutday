@@ -40,17 +40,6 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
-
-        // Versión 1
-        /*
-        AuthenticationManager authenticationManager =
-                authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder)
-                        .and().build();
-        */
-
-        // Versión 2
         AuthenticationManager authenticationManager =
                 authenticationManagerBuilder.authenticationProvider(authenticationProvider())
                         .build();

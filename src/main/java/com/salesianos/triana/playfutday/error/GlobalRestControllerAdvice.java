@@ -101,7 +101,7 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
     }
 
 
-    @ExceptionHandler({org.springframework.security.core.AuthenticationException.class})
+    @ExceptionHandler({AuthenticationException.class})
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
         return (buildApiError("The user is not authenticated", request, HttpStatus.UNAUTHORIZED));
     }

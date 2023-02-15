@@ -12,7 +12,7 @@ import java.lang.annotation.*;
 @Documented
 public @interface FieldsValueMatch {
 
-    String message() default "The password are not similar";
+    String message() default "Los valores de los campos no coinciden";
 
     Class<?>[] groups() default {};
 
