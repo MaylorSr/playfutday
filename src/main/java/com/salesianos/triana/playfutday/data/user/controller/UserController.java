@@ -23,7 +23,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
-import javax.persistence.PreRemove;
+import javax.validation.Valid;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -38,7 +38,7 @@ public class UserController {
 
     @JsonView(viewUser.UserResponse.class)
     @PostMapping("/auth/register")
-    public ResponseEntity<UserResponse> createUserWithUserRole(@RequestBody UserRequest createUserRequest) {
+    public ResponseEntity<UserResponse> createUserWithUserRole(@Valid @RequestBody UserRequest createUserRequest) {
         User user = userService.createUserWithUserRole(createUserRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
@@ -108,7 +108,7 @@ public class UserController {
 
 
     @PostMapping("/auth/register/admin")
-    public ResponseEntity<UserResponse> createUserWithAdminRole(@RequestBody UserRequest createUserRequest) {
+    public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody UserRequest createUserRequest) {
         User user = userService.createUserWithAdminRole(createUserRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));

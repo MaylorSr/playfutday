@@ -45,7 +45,7 @@ public class Post implements Serializable {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy HH:mm:ss")
     private LocalDateTime uploadDate = LocalDateTime.now();
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.PERSIST)
+    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.MERGE)
     @JoinColumn(name = "user_id", foreignKey = @ForeignKey(name = "FK_POST_USER"))
     private User author;
 

@@ -15,7 +15,6 @@ import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
-import com.salesianos.triana.playfutday.security.errorhandling.JwtAccessDeniedHandler;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageImpl;
@@ -25,9 +24,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import javax.persistence.EntityNotFoundException;
-import javax.persistence.PreRemove;
-import java.nio.file.AccessDeniedException;
 import java.util.EnumSet;
 import java.util.List;
 import java.util.Optional;
@@ -177,6 +173,15 @@ public class UserService {
 
     public boolean passwordMatch(User user, String clearPassword) {
         return passwordEncoder.matches(clearPassword, user.getPassword());
+    }
+
+
+    public boolean userExistsEmail(String s) {
+        return userRepository.existsByEmailIgnoreCase(s);
+    }
+
+    public boolean userPhoneUnique(String s) {
+        return userRepository.existsByPhoneIgnoreCase(s);
     }
 
 

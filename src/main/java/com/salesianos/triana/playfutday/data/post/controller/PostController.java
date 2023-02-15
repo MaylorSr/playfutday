@@ -16,6 +16,7 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
+import javax.validation.Valid;
 import java.net.URI;
 import java.util.UUID;
 
@@ -24,11 +25,6 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class PostController {
     private final PostService postService;
-
-
-    /**
-     * put
-     */
 
     /**
      * Muestra todos los post de los usuarios
@@ -78,7 +74,7 @@ public class PostController {
      * @PreUthenticate(isAuthetica) eso hace que tenga que estar autenticado para poder hacer la peticion
      */
     @JsonView(viewPost.PostResponse.class)
-    public ResponseEntity<PostResponse> savePostByUser(@RequestBody PostRequest postRequest, @AuthenticationPrincipal User user) {
+    public ResponseEntity<PostResponse> savePostByUser(@Valid @RequestBody PostRequest postRequest, @AuthenticationPrincipal User user) {
         PostResponse newPost = postService.createPostByUser(postRequest, user);
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
@@ -119,7 +115,7 @@ public class PostController {
      */
     @PostMapping("/commentary/{id}")
     @JsonView(viewPost.PostResponse.class)
-    public ResponseEntity<PostResponse> saveCommentaryByUser(@RequestBody CommentaryRequest request, @PathVariable Long id, @AuthenticationPrincipal User user) {
+    public ResponseEntity<PostResponse> saveCommentaryByUser(@Valid @RequestBody CommentaryRequest request, @PathVariable Long id, @AuthenticationPrincipal User user) {
         PostResponse newCommentaryInPost = postService.giveCommentByUser(id, user, request);
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
