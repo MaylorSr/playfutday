@@ -35,7 +35,6 @@ public class PostService {
 
     private final CommentaryRepository repoCommentary;
 
-    private final UserService userService;
     private final UserRepository userRepository;
 
     public String postExists = "The list of post is empty";

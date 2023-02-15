@@ -1,9 +1,11 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
+import com.salesianos.triana.playfutday.data.commentary.repository.CommentaryRepository;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
+import com.salesianos.triana.playfutday.data.post.service.PostService;
 import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
@@ -24,10 +26,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
-import java.util.EnumSet;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 @RequiredArgsConstructor
@@ -36,6 +35,9 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final PostRepository postRepository;
+
+    private final PostService postService;
+
 
     public User createUser(UserRequest createUserRequest, EnumSet<UserRole> roles) {
         User user = User.builder()
@@ -50,17 +52,15 @@ public class UserService {
 
     public ResponseEntity<?> deleteUser(UUID idU, User user) {
         Optional<User> optionalUser = userRepository.findById(idU);
-
         if (optionalUser.isPresent()) {
-            User opUser = optionalUser.get();
-            if (opUser.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
-                this.deleteById(idU);
-                return ResponseEntity.noContent().build();
+            User userToDelete = optionalUser.get();
+            if (userToDelete.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
+                userRepository.delete(optionalUser.get());
             }
-            throw new GlobalEntityNotFounException("You not have permission for delete that post!");
-        }
-        throw new GlobalEntityNotFounException("The user or the post not found");
+            return ResponseEntity.noContent().build();
 
+        }
+        throw new GlobalEntityNotFounException("User not found with that id");
     }
 
     public User createUserWithUserRole(UserRequest createUserRequest) {

@@ -114,6 +114,11 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
     }
 
+    /**
+     * LOGOUT
+     **/
+
+
 
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
