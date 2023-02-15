@@ -127,12 +127,12 @@ public class User implements UserDetails {
         return enabled;
     }
 
-    @PreRemove
+ /*   @PreRemove
     public void deleteMyPost(){
         this.getMyPost().forEach(p -> {
             p.setAuthor(null);
         });
         this.getMyPost().clear();
-    }
+    }*/
 
 }

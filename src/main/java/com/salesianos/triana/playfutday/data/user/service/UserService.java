@@ -53,8 +53,7 @@ public class UserService {
     public ResponseEntity<?> deleteUser(UUID idU, User user) {
         Optional<User> optionalUser = userRepository.findById(idU);
         if (optionalUser.isPresent()) {
-            User userToDelete = optionalUser.get();
-            if (userToDelete.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
+            if (optionalUser.get().getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
                 userRepository.delete(optionalUser.get());
             }
             return ResponseEntity.noContent().build();

@@ -55,11 +55,11 @@ public class Post implements Serializable {
     @OneToMany(mappedBy = "post", orphanRemoval = true, cascade = CascadeType.MERGE)
     @Builder.Default
     private List<Commentary> commentaries = new ArrayList<>();
-
+/*
 
     @PreRemove
     public void preRemovePost() {
         this.getLikes().clear();
-    }
+    }*/
 }
 
