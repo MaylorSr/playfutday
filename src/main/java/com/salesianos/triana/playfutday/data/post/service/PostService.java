@@ -10,9 +10,9 @@ import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
-import com.salesianos.triana.playfutday.data.user.service.UserService;
 import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
 import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
+import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
@@ -25,7 +25,6 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
-import java.nio.file.AccessDeniedException;
 import java.util.*;
 
 @Service
@@ -43,7 +42,7 @@ public class PostService {
         List<SearchCriteria> params = SearchCriteriaExtractor.extractSearchCriteriaList(s);
         PageResponse<PostResponse> res = search(params, pageable);
         if (res.getContent().isEmpty()) {
-            throw new GlobalEntityListNotFounException("The list of post is empty in that page");
+            throw new GlobalEntityListNotFounException(postExists);
         }
         return res;
 
@@ -73,14 +72,6 @@ public class PostService {
         return new PageResponse<>(postResponsePage);
     }
 
-
-    /**
-     * Crear un post
-     *
-     * @param postRequest
-     * @param user
-     * @return
-     */
     public PostResponse createPostByUser(PostRequest postRequest, User user) {
         return PostResponse.of(
                 repo.save(Post.builder()
@@ -94,66 +85,61 @@ public class PostService {
 
 
     public PostResponse giveCommentByUser(Long id, User user, CommentaryRequest request) {
-        return repo.findById(id).map(post -> {
-            post.getCommentaries().add(Commentary.builder()
-                    .post(post)
-                    .author(user.getUsername())
-                    .message(request.getMessage())
-                    .build());
-            repo.save(post);
-            return PostResponse.of(post);
-        }).orElseThrow(() -> new GlobalEntityNotFounException(postExists));
+        return repo.findById(id).map(
+                post -> {
+                    post.getCommentaries().add(Commentary.builder()
+                            .post(post)
+                            .author(user.getUsername())
+                            .message(request.getMessage())
+                            .build());
+                    repo.save(post);
+                    return PostResponse.of(post);
+                }
+        ).orElseThrow(() -> new GlobalEntityNotFounException(postExists));
     }
 
     public PostResponse giveLikeByUser(Long id, User user) {
-        Optional<Post> optionalPost = repo.findById(id);
-        if (optionalPost.isPresent()) {
-            Post post = optionalPost.get();
-            List<User> likes = post.getLikes();
-            boolean exists = repo.existsLikeByUser(id, user.getId());
-            if (!exists) {
-                likes.add(user);
-            } else {
-                likes.remove(likes.indexOf(user) + 1);
-                repo.save(post);
-            }
-            return PostResponse.of(repo.save(post));
-        }
-        throw new GlobalEntityNotFounException(postExists);
+        return repo.findById(id).map(
+                post -> {
+                    List<User> likes = post.getLikes();
+                    boolean exists = repo.existsLikeByUser(id, user.getId());
+                    if (!exists) {
+                        likes.add(user);
+                    } else {
+                        likes.remove(likes.indexOf(user) + 1);
+                        repo.save(post);
+                    }
+                    return PostResponse.of(repo.save(post));
+                }
+        ).orElseThrow(() -> new GlobalEntityNotFounException("The post not found!"));
     }
 
 
     public ResponseEntity<?> deletePostByUser(Long id, UUID idU, User user) {
-        Optional<User> optionalUser = userRepository.findById(idU);
-        Optional<Post> optionalPost = repo.findById(id);
 
-        if (optionalUser.isPresent() && optionalPost.isPresent()) {
-            User userWithPost = optionalUser.get();
-            Post postToDelete = optionalPost.get();
-            if (userWithPost.getMyPost().contains(postToDelete)) {
-                if (userWithPost.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
-                    userWithPost.getMyPost().remove(postToDelete);
-                    repo.delete(postToDelete);
-                    userRepository.save(userWithPost);
-                    return ResponseEntity.noContent().build();
+        return repo.findById(id).map(
+                post -> {
+                    return userRepository.findById(idU)
+                            .map(oldUser -> {
+                                        if (oldUser.getMyPost().contains(post)) {
+                                            if (oldUser.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
+                                                oldUser.getMyPost().remove(post);
+                                                repo.delete(post);
+                                                userRepository.save(oldUser);
+                                                return ResponseEntity.noContent().build();
+                                            }
+                                            throw new NotPermission();
+                                        }
+                                        throw new GlobalEntityNotFounException("The post not found in your posts");
+                                    }
+                            ).orElseThrow(() -> new GlobalEntityNotFounException("The user not exists"));
                 }
-                throw new GlobalEntityNotFounException("You not have permission for delete that post!");
-
-            }
-            throw new GlobalEntityNotFounException("You not content this post!");
-
-
-        }
-
-        throw new GlobalEntityNotFounException("The user or the post not found");
+        ).orElseThrow(() -> new GlobalEntityNotFounException(postExists));
     }
 
     public ResponseEntity<?> deleteCommentary(Long id) {
-        Optional<Commentary> commentaryOptional = repoCommentary.findById(id);
-        if (commentaryOptional.isPresent()) {
-            repoCommentary.deleteById(id);
-            return ResponseEntity.noContent().build();
-        }
-        throw new GlobalEntityNotFounException("The commentary not exists");
+        Commentary commentaryOptional = repoCommentary.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The commentary id not exists"));
+        repoCommentary.delete(commentaryOptional);
+        return ResponseEntity.noContent().build();
     }
 }

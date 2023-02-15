@@ -92,7 +92,7 @@ public class UserController {
      */
 
     @DeleteMapping("/user/{idU}")
-    public ResponseEntity<?> deleteUser(@PathVariable UUID idU, @AuthenticationPrincipal User user)  {
+    public ResponseEntity<?> deleteUser(@PathVariable UUID idU, @AuthenticationPrincipal User user) {
         return userService.deleteUser(idU, user);
     }
 
@@ -107,18 +107,17 @@ public class UserController {
      * Añadir / Quitar rol de administrador a un usuario que lo tenga
      */
 
-
+/*
     @PostMapping("/auth/register/admin")
     public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody UserRequest createUserRequest) {
         User user = userService.createUserWithAdminRole(createUserRequest);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
-    }
+    }*/
 
     /**
      * LOGOUT
      **/
-
 
 
     @PostMapping("/auth/login")
