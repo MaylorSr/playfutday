@@ -5,6 +5,8 @@ import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
+import com.salesianos.triana.playfutday.data.user.dto.ChangePasswordRequest;
+import com.salesianos.triana.playfutday.data.user.dto.EditInfoUserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
 import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
@@ -26,6 +28,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import javax.persistence.EntityNotFoundException;
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -49,6 +53,16 @@ public class UserService {
         return userRepository.save(user);
     }
 
+
+    public EditInfoUserRequest editProfileAvatar(User user, EditInfoUserRequest editInfoUserRequest) {
+        user.setAvatar(editInfoUserRequest.getAvatar());
+        return EditInfoUserRequest.builder()
+                .biography(user.getBiography())
+                .avatar(editInfoUserRequest.getAvatar())
+                .birthday(user.getBirthday())
+                .phone(user.getPhone())
+                .build();
+    }
 
     public ResponseEntity<?> deleteUser(UUID idU, User user) throws NotPermission {
         return userRepository.findById(idU).map(
@@ -144,13 +158,14 @@ public class UserService {
                 }).or(() -> Optional.empty());
     }*/
 
-    public Optional<User> editPassword(UUID userId, String newPassword) {
-        return userRepository.findById(userId)
-                .map(u -> {
-                    u.setPassword(passwordEncoder.encode(newPassword));
-                    return userRepository.save(u);
-                }).or(Optional::empty);
-
+    public UserResponse editPassword(User user, ChangePasswordRequest changePasswordRequest) {
+        return userRepository.findById(user.getId()).map(
+                oldUserPassword -> {
+                    oldUserPassword.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+                    oldUserPassword.setLastPasswordChangeAt(LocalDateTime.now());
+                    return UserResponse.fromUser(userRepository.save(oldUserPassword));
+                }
+        ).orElseThrow(() -> new EntityNotFoundException(""));
     }
 
     public boolean passwordMatch(User user, String clearPassword) {

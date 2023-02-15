@@ -57,9 +57,7 @@ public class UserController {
     }*/
     @GetMapping("/user")
     @JsonView(viewUser.UserDetailsByAdmin.class)
-    public PageResponse<UserResponse> findAllUsers(
-            @RequestParam(value = "s", defaultValue = "") String s,
-            @PageableDefault(size = 3, page = 0) Pageable pageable) {
+    public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s, @PageableDefault(size = 3, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
 
@@ -71,8 +69,7 @@ public class UserController {
 
     @GetMapping("/fav")
     @JsonView(viewPost.PostLikeMe.class)
-    public PageResponse<PostResponse> findAll(
-            @PageableDefault(size = 5, page = 0) Pageable pageable, @AuthenticationPrincipal User user) {
+    public PageResponse<PostResponse> findAll(@PageableDefault(size = 5, page = 0) Pageable pageable, @AuthenticationPrincipal User user) {
         return userService.findMyFavPost(user, pageable);
     }
 
@@ -103,67 +100,30 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addAdminRoleToUser(id));
     }
 
-    /**
-     * Añadir / Quitar rol de administrador a un usuario que lo tenga
-     */
-
-/*
-    @PostMapping("/auth/register/admin")
-    public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody UserRequest createUserRequest) {
-        User user = userService.createUserWithAdminRole(createUserRequest);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
-    }*/
-
-    /**
-     * LOGOUT
-     **/
-
-
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
     public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication =
-                authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginRequest.getUsername(),
-                                loginRequest.getPassword()
-                        )
-                );
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
 
         User user = (User) authentication.getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(JwtUserResponse.of(user, token));
+        return ResponseEntity.status(HttpStatus.CREATED).body(JwtUserResponse.of(user, token));
     }
 
 
     @PutMapping("/user/changePassword")
-    public ResponseEntity<UserResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,
-                                                       @AuthenticationPrincipal User loggedUser) {
+    @JsonView(viewUser.UserChangeDate.class)
+    public UserResponse changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest, @AuthenticationPrincipal User user) {
+        return userService.editPassword(user, changePasswordRequest);
+    }
 
-        // Este código es mejorable.
-        // La validación de la contraseña nueva se puede hacer con un validador.
-        // La gestión de errores se puede hacer con excepciones propias
-        try {
-            if (userService.passwordMatch(loggedUser, changePasswordRequest.getOldPassword())) {
-                Optional<User> modified = userService.editPassword(loggedUser.getId(), changePasswordRequest.getNewPassword());
-                if (modified.isPresent())
-                    return ResponseEntity.ok(UserResponse.fromUser(modified.get()));
-            } else {
-                // Lo ideal es que esto se gestionara de forma centralizada
-                // Se puede ver cómo hacerlo en la formación sobre Validación con Spring Boot
-                // y la formación sobre Gestión de Errores con Spring Boot
-                throw new RuntimeException();
-            }
-        } catch (RuntimeException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password Data Error");
-        }
-
-        return null;
+    @PutMapping("/edit/avatar")
+    @JsonView(viewUser.editProfile.class)
+    public EditInfoUserRequest EditProfile(@Valid @RequestBody EditInfoUserRequest editInfoUserRequest, @AuthenticationPrincipal User user) {
+        return userService.editProfileAvatar(user, editInfoUserRequest);
     }
 
 }

@@ -18,5 +18,9 @@ public interface viewUser {
 
     }
 
+    static class editProfile{
+
+    }
+
 
 }
