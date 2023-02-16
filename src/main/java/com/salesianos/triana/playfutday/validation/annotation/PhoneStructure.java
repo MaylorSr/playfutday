@@ -20,7 +20,7 @@ public @interface PhoneStructure {
 
     int min() default 9;
 
-    int max() default 13;
+    int max() default 9;
 
     boolean hasNumber() default true;
 }

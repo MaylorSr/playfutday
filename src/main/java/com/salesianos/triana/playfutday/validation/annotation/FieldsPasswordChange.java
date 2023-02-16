@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.validation.annotation;
 
+import com.salesianos.triana.playfutday.validation.validator.FieldsPasswordMatchValidator;
 import com.salesianos.triana.playfutday.validation.validator.FieldsValueMatchValidator;
 
 import javax.validation.Constraint;
@@ -8,11 +9,11 @@ import java.lang.annotation.*;
 
 @Target({ElementType.TYPE})
 @Retention(RetentionPolicy.RUNTIME)
-@Constraint(validatedBy = FieldsValueMatchValidator.class)
+@Constraint(validatedBy = FieldsPasswordMatchValidator.class)
 @Documented
-public @interface FieldsValueMatch {
+public @interface FieldsPasswordChange {
 
-    String message() default "Los valores de los campos no coinciden";
+    String message() default "The new password are similar to old password!";
 
     Class<?>[] groups() default {};
 
@@ -21,6 +22,4 @@ public @interface FieldsValueMatch {
     String field();
 
     String fieldMatch();
-
-
 }

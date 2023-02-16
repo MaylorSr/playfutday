@@ -1,6 +1,7 @@
 package com.salesianos.triana.playfutday.data.user.model;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.user.database.EnumSetUserRoleConverter;
 import lombok.AllArgsConstructor;
@@ -29,9 +30,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-@NamedEntityGraph(
+/*@NamedEntityGraph(
         name = "user_with_posts",
-        attributeNodes = @NamedAttributeNode(value = "myPost"))
+        attributeNodes = @NamedAttributeNode(value = "myPost"))*/
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
@@ -52,18 +53,15 @@ public class User implements UserDetails {
     private String username;
 
     private String email;
-
     private String password;
 
-    @Builder.Default
-    private String avatar = "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png";
+    private String avatar;
 
     private String biography;
 
     private String phone;
 
-
-    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
     @Builder.Default
     private List<Post> myPost = new ArrayList<>();
 
@@ -77,9 +75,6 @@ public class User implements UserDetails {
     @Builder.Default
     private boolean credentialsNonExpired = true;
 
-    /**
-     * SI SE CAMBIA A FALSE LO QUE PODEMOS HACER CON ESO ES BANEARLO
-     */
     @Builder.Default
     private boolean enabled = true;
 
@@ -131,5 +126,12 @@ public class User implements UserDetails {
         return enabled;
     }
 
+ /*   @PreRemove
+    public void deleteMyPost(){
+        this.getMyPost().forEach(p -> {
+            p.setAuthor(null);
+        });
+        this.getMyPost().clear();
+    }*/
 
 }

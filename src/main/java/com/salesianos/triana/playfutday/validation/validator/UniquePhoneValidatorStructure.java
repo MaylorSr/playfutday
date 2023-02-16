@@ -37,7 +37,7 @@ public class UniquePhoneValidatorStructure implements ConstraintValidator<PhoneS
 
 
         if (number)
-            rules.add(new CharacterRule(EnglishCharacterData.Digit, 1));
+            rules.add(new CharacterRule(EnglishCharacterData.Digit, min));
 
 
         PasswordValidator phoneValidator = new PasswordValidator(rules);
@@ -46,12 +46,6 @@ public class UniquePhoneValidatorStructure implements ConstraintValidator<PhoneS
 
         if (result.isValid())
             return true;
-
-        List<String> messages = phoneValidator.getMessages(result);
-        String template = messages.stream().collect(Collectors.joining(","));
-        constraintValidatorContext.buildConstraintViolationWithTemplate(template)
-                .addConstraintViolation()
-                .disableDefaultConstraintViolation();
         return false;
     }
 }

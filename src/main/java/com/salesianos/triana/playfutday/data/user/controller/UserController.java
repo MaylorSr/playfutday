@@ -1,12 +1,14 @@
 package com.salesianos.triana.playfutday.data.user.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.service.UserService;
+import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
 import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 
@@ -21,9 +23,11 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -36,8 +40,8 @@ public class UserController {
     private final JwtProvider jwtProvider;
 
 
-    @JsonView(viewUser.UserResponse.class)
     @PostMapping("/auth/register")
+    @JsonView(viewUser.UserResponse.class)
     public ResponseEntity<UserResponse> createUserWithUserRole(@Valid @RequestBody UserRequest createUserRequest) {
         User user = userService.createUserWithUserRole(createUserRequest);
 
@@ -47,18 +51,10 @@ public class UserController {
     /**
      * OBTENER TODOS LOS USUARIOS PARA ALVISTA DEL ADMIN
      */
-/*
-    @JsonView(viewUser.UserDetailsByAdmin.class)
-*/
- /*   @GetMapping("/user")
-    public List<UserResponse> findallUsers() {
-        return userService.findAllUsers();
-    }*/
+
     @GetMapping("/user")
     @JsonView(viewUser.UserDetailsByAdmin.class)
-    public PageResponse<UserResponse> findAllUsers(
-            @RequestParam(value = "s", defaultValue = "") String s,
-            @PageableDefault(size = 3, page = 0) Pageable pageable) {
+    public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s, @PageableDefault(size = 3, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
 
@@ -70,8 +66,7 @@ public class UserController {
 
     @GetMapping("/fav")
     @JsonView(viewPost.PostLikeMe.class)
-    public PageResponse<PostResponse> findAll(
-            @PageableDefault(size = 5, page = 0) Pageable pageable, @AuthenticationPrincipal User user) {
+    public PageResponse<PostResponse> findAll(@PageableDefault(size = 5, page = 0) Pageable pageable, @AuthenticationPrincipal User user) {
         return userService.findMyFavPost(user, pageable);
     }
 
@@ -102,63 +97,47 @@ public class UserController {
         return ResponseEntity.status(HttpStatus.CREATED).body(userService.addAdminRoleToUser(id));
     }
 
-    /**
-     * Añadir / Quitar rol de administrador a un usuario que lo tenga
-     */
-
-
-    @PostMapping("/auth/register/admin")
-    public ResponseEntity<UserResponse> createUserWithAdminRole(@Valid @RequestBody UserRequest createUserRequest) {
-        User user = userService.createUserWithAdminRole(createUserRequest);
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(UserResponse.fromUser(user));
-    }
-
-
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
     public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication =
-                authManager.authenticate(
-                        new UsernamePasswordAuthenticationToken(
-                                loginRequest.getUsername(),
-                                loginRequest.getPassword()
-                        )
-                );
+        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
 
         User user = (User) authentication.getPrincipal();
 
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(JwtUserResponse.of(user, token));
+        return ResponseEntity.status(HttpStatus.CREATED).body(JwtUserResponse.of(user, token));
     }
 
 
     @PutMapping("/user/changePassword")
-    public ResponseEntity<UserResponse> changePassword(@RequestBody ChangePasswordRequest changePasswordRequest,
-                                                       @AuthenticationPrincipal User loggedUser) {
-
-        // Este código es mejorable.
-        // La validación de la contraseña nueva se puede hacer con un validador.
-        // La gestión de errores se puede hacer con excepciones propias
-        try {
-            if (userService.passwordMatch(loggedUser, changePasswordRequest.getOldPassword())) {
-                Optional<User> modified = userService.editPassword(loggedUser.getId(), changePasswordRequest.getNewPassword());
-                if (modified.isPresent())
-                    return ResponseEntity.ok(UserResponse.fromUser(modified.get()));
-            } else {
-                // Lo ideal es que esto se gestionara de forma centralizada
-                // Se puede ver cómo hacerlo en la formación sobre Validación con Spring Boot
-                // y la formación sobre Gestión de Errores con Spring Boot
-                throw new RuntimeException();
-            }
-        } catch (RuntimeException ex) {
-            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Password Data Error");
-        }
-
-        return null;
+    @JsonView(viewUser.UserChangeDate.class)
+    public UserResponse changePassword(@Valid @RequestBody ChangePasswordRequest changePasswordRequest, @AuthenticationPrincipal User user) {
+        return userService.editPassword(user, changePasswordRequest);
     }
 
+    @PutMapping("/edit/avatar")
+    @JsonView(viewUser.editProfile.class)
+    public EditInfoUserRequest editProfile(@PathVariable("image") MultipartFile image, @AuthenticationPrincipal User user) throws StorageException {
+        return userService.editProfileAvatar(user, image);
+    }
+
+    @PutMapping("/edit/bio")
+    @JsonView(viewUser.editProfile.class)
+    public EditInfoUserRequest editProfileBio(@AuthenticationPrincipal User user, @RequestBody EditInfoUserRequest request) {
+        return userService.editProfileBio(user, request);
+    }
+
+    @PutMapping("/edit/phone")
+    @JsonView(viewUser.editProfile.class)
+    public EditPhoneUserRequest editPhone(@AuthenticationPrincipal User user, @Valid @RequestBody EditPhoneUserRequest request) {
+        return userService.editProfilePhone(user, request);
+    }
+
+    @PutMapping("/edit/birthday")
+    @JsonView(viewUser.editProfile.class)
+    public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
+        return userService.editProfileBirthday(user, request);
+    }
 }

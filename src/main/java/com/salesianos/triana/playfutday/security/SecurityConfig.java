@@ -19,6 +19,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 
 @Configuration
@@ -40,17 +42,6 @@ public class SecurityConfig {
         AuthenticationManagerBuilder authenticationManagerBuilder =
                 http.getSharedObject(AuthenticationManagerBuilder.class);
 
-
-        // Versión 1
-        /*
-        AuthenticationManager authenticationManager =
-                authenticationManagerBuilder
-                .userDetailsService(userDetailsService)
-                .passwordEncoder(passwordEncoder)
-                        .and().build();
-        */
-
-        // Versión 2
         AuthenticationManager authenticationManager =
                 authenticationManagerBuilder.authenticationProvider(authenticationProvider())
                         .build();
@@ -58,7 +49,6 @@ public class SecurityConfig {
         return authenticationManager;
 
     }
-
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {

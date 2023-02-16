@@ -19,7 +19,6 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             """)
     Page<Post> findAllPostOfOneUserByUserName(@Param("username") String username, Pageable pageable);
 
-
     @Query("SELECT CASE WHEN COUNT(p) > 0 THEN true ELSE false END FROM Post p JOIN p.likes l WHERE p.id = :postId AND l.id = :userId")
     boolean existsLikeByUser(@Param("postId") Long postId, @Param("userId") UUID userId);
 
@@ -28,9 +27,10 @@ public interface PostRepository extends JpaRepository<Post, Long>, JpaSpecificat
             """)
     Page<Post> findAllPostFavUser(@Param("id") UUID id, Pageable pageable);
 
-
-
-
+    @Query("""
+            SELECT p FROM Post p JOIN p.likes l WHERE l.id =:id
+            """)
+    List<Post> findOnIlikePost(@Param("id") UUID id);
 
 
 }

@@ -12,7 +12,7 @@ import java.util.stream.Collectors;
 public class StrongPasswordValidator implements ConstraintValidator<StrongPassword, String> {
 
     int min, max;
-    boolean upper, lower, number, alpha, special;
+    boolean upper, lower;
 
 
     @Override
@@ -21,9 +21,6 @@ public class StrongPasswordValidator implements ConstraintValidator<StrongPasswo
         max = constraintAnnotation.max();
         upper = constraintAnnotation.hasUpper();
         lower = constraintAnnotation.hasLower();
-        number = constraintAnnotation.hasNumber();
-        alpha = constraintAnnotation.hasAlpha();
-        special = constraintAnnotation.hasSpecial();
     }
 
     @Override
@@ -33,25 +30,11 @@ public class StrongPasswordValidator implements ConstraintValidator<StrongPasswo
 
         rules.add(new LengthRule(min, max));
 
-        if (alpha) {
-            rules.add(new CharacterRule(EnglishCharacterData.Alphabetical, 1));
 
-            if (upper)
-                rules.add(new CharacterRule(EnglishCharacterData.UpperCase, 1));
-
-            if (lower)
-                rules.add(new CharacterRule(EnglishCharacterData.LowerCase, 1));
-
-
+        if (upper && lower) {
+            rules.add(new CharacterRule(EnglishCharacterData.UpperCase, 1));
+            rules.add(new CharacterRule(EnglishCharacterData.LowerCase, 1));
         }
-
-
-        if (number)
-            rules.add(new CharacterRule(EnglishCharacterData.Digit, 1));
-
-
-        if (special)
-            rules.add(new CharacterRule(EnglishCharacterData.Special, 1));
 
         PasswordValidator passwordValidator = new PasswordValidator(rules);
 
