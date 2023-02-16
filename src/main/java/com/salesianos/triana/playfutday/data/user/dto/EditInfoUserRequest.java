@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.data.user.dto;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonView;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
@@ -17,6 +18,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Past;
 import java.time.LocalDate;
 
 @Builder
@@ -31,14 +33,9 @@ public class EditInfoUserRequest {
     @Length(max = 200, message = "{editRequest.biography.limit}")
     private String biography;
 
-    @NotBlank(message = "{createUserRequest.phone.blank}")
-    @PhoneStructure(message = "{createUserRequest.phone.digits}")
-    @UniquePhone(message = "{createUserRequest.phone.exists}")
     @JsonView(viewUser.editProfile.class)
-    private String phone;
-
-    @JsonView(viewUser.editProfile.class)
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @Past(message = "{editRequest.date.pastDate}")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "dd/MM/yyyy")
     private LocalDate birthday;
 
 

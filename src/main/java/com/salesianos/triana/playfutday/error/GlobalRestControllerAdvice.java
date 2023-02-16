@@ -1,5 +1,6 @@
 package com.salesianos.triana.playfutday.error;
 
+import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.error.model.impl.ApiErrorImpl;
 import com.salesianos.triana.playfutday.error.model.impl.ApiValidationSubError;
 import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounException;
@@ -105,6 +106,12 @@ public class GlobalRestControllerAdvice extends ResponseEntityExceptionHandler {
     public ResponseEntity<?> handleAuthenticationException(AuthenticationException ex, WebRequest request) {
         return (buildApiError("The user is not authenticated", request, HttpStatus.UNAUTHORIZED));
     }
+
+    @ExceptionHandler({StorageException.class})
+    public ResponseEntity<?> storageFileEmpty(WebRequest request) {
+        return (buildApiError("You not put a image int the post!", request, HttpStatus.BAD_REQUEST));
+    }
+
 
     @ExceptionHandler({org.springframework.security.access.AccessDeniedException.class, NotPermission.class})
     public ResponseEntity<?> handleAccessDeniedException(AccessDeniedException ex, WebRequest request) {

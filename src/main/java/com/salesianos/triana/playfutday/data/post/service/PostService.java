@@ -28,13 +28,15 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.transaction.Transactional;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.*;
 
 @Service
 @RequiredArgsConstructor
 public class PostService {
     private final PostRepository repo;
-
     private final CommentaryRepository repoCommentary;
 
     private final UserRepository userRepository;
@@ -131,6 +133,7 @@ public class PostService {
                                         if (oldUser.getMyPost().contains(post)) {
                                             if (oldUser.getId().equals(user.getId()) || user.getRoles().contains(UserRole.ADMIN)) {
                                                 oldUser.getMyPost().remove(post);
+                                                storageService.deleteFile(post.getImage());
                                                 repo.delete(post);
                                                 userRepository.save(oldUser);
                                                 return ResponseEntity.noContent().build();
@@ -148,20 +151,6 @@ public class PostService {
         Commentary commentaryOptional = repoCommentary.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("The commentary id not exists"));
         repoCommentary.delete(commentaryOptional);
         return ResponseEntity.noContent().build();
-    }
-
-
-    @Transactional
-    public PostResponse createPostOptional(PostRequest postRequest, MultipartFile file, User user) {
-        String filename = storageService.store(file);
-        return PostResponse.of(
-                repo.save(Post.builder()
-                        .tag(postRequest.getTag())
-                        .image(filename)
-                        .author(user)
-                        .description(postRequest.getDescription())
-                        .build())
-        );
     }
 
 

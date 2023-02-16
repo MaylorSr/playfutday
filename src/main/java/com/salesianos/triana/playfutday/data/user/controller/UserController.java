@@ -1,6 +1,7 @@
 package com.salesianos.triana.playfutday.data.user.controller;
 
 import com.fasterxml.jackson.annotation.JsonView;
+import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.data.interfaces.post.viewPost;
 import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
@@ -26,6 +27,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
+import java.text.ParseException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -117,7 +119,7 @@ public class UserController {
 
     @PutMapping("/edit/avatar")
     @JsonView(viewUser.editProfile.class)
-    public EditInfoUserRequest editProfile(@PathVariable("image") MultipartFile image, @AuthenticationPrincipal User user) {
+    public EditInfoUserRequest editProfile(@PathVariable("image") MultipartFile image, @AuthenticationPrincipal User user) throws StorageException {
         return userService.editProfileAvatar(user, image);
     }
 
@@ -129,7 +131,7 @@ public class UserController {
 
     @PutMapping("/edit/phone")
     @JsonView(viewUser.editProfile.class)
-    public EditInfoUserRequest editPhone(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
+    public EditPhoneUserRequest editPhone(@AuthenticationPrincipal User user, @Valid @RequestBody EditPhoneUserRequest request) {
         return userService.editProfilePhone(user, request);
     }
 
@@ -138,6 +140,4 @@ public class UserController {
     public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
         return userService.editProfileBirthday(user, request);
     }
-
-
 }

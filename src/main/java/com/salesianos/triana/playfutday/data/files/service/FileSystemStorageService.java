@@ -4,6 +4,7 @@ import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.data.files.utils.MediaTypeUrlResource;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileSystemUtils;
 import org.springframework.util.StringUtils;
@@ -46,7 +47,7 @@ public class FileSystemStorageService implements StorageService {
         try {
             return store(file.getBytes(), file.getOriginalFilename(), file.getContentType());
         } catch (Exception ex) {
-            throw new StorageException("Error storing file: " + file.getOriginalFilename(), ex);
+            throw new StorageException("");
         }
     }
 

@@ -1,15 +1,13 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
+import com.salesianos.triana.playfutday.data.files.exception.StorageException;
 import com.salesianos.triana.playfutday.data.files.service.FileSystemStorageService;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
 import com.salesianos.triana.playfutday.data.post.service.PostService;
-import com.salesianos.triana.playfutday.data.user.dto.ChangePasswordRequest;
-import com.salesianos.triana.playfutday.data.user.dto.EditInfoUserRequest;
-import com.salesianos.triana.playfutday.data.user.dto.UserRequest;
-import com.salesianos.triana.playfutday.data.user.dto.UserResponse;
+import com.salesianos.triana.playfutday.data.user.dto.*;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
 import com.salesianos.triana.playfutday.data.user.repository.UserRepository;
@@ -34,8 +32,10 @@ import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
+import java.text.ParseException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -65,7 +65,7 @@ public class UserService {
     }
 
     @Transactional
-    public EditInfoUserRequest editProfileAvatar(User user, MultipartFile image) {
+    public EditInfoUserRequest editProfileAvatar(User user, MultipartFile image) throws StorageException {
         String filename = storageService.store(image);
         user.setAvatar(filename);
         userRepository.save(user);
@@ -83,10 +83,10 @@ public class UserService {
     }
 
 
-    public EditInfoUserRequest editProfilePhone(User user, EditInfoUserRequest request) {
+    public EditPhoneUserRequest editProfilePhone(User user, EditPhoneUserRequest request) {
         user.setPhone(request.getPhone());
         userRepository.save(user);
-        return EditInfoUserRequest.builder()
+        return EditPhoneUserRequest.builder()
                 .phone(user.getPhone())
                 .build();
     }
@@ -95,7 +95,7 @@ public class UserService {
         user.setBirthday(request.getBirthday());
         userRepository.save(user);
         return EditInfoUserRequest.builder()
-                .birthday(user.getBirthday())
+                .birthday(request.getBirthday())
                 .build();
     }
 
