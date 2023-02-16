@@ -55,8 +55,7 @@ public class User implements UserDetails {
     private String email;
     private String password;
 
-    @Builder.Default
-    private String avatar = "https://www.softzone.es/app/uploads-softzone.es/2018/04/guest.png";
+    private String avatar;
 
     private String biography;
 

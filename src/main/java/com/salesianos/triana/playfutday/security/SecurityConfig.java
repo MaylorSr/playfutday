@@ -19,6 +19,8 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.firewall.HttpFirewall;
+import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 
 @Configuration
@@ -48,7 +50,6 @@ public class SecurityConfig {
 
     }
 
-
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authenticationProvider = new DaoAuthenticationProvider();
@@ -76,7 +77,6 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-
                 .antMatchers("/user/{idU}", "/user/{id}/user/{idU}").hasRole("USER")
                 .antMatchers("/banUserByAdmin/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated();

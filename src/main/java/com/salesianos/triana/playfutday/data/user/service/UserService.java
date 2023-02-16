@@ -1,6 +1,7 @@
 package com.salesianos.triana.playfutday.data.user.service;
 
 
+import com.salesianos.triana.playfutday.data.files.service.FileSystemStorageService;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
 import com.salesianos.triana.playfutday.data.post.repository.PostRepository;
@@ -16,6 +17,7 @@ import com.salesianos.triana.playfutday.exception.GlobalEntityListNotFounExcepti
 import com.salesianos.triana.playfutday.exception.GlobalEntityNotFounException;
 import com.salesianos.triana.playfutday.exception.NotPermission;
 import com.salesianos.triana.playfutday.search.page.PageResponse;
+import com.salesianos.triana.playfutday.search.spec.GenericSpecification;
 import com.salesianos.triana.playfutday.search.spec.GenericSpecificationBuilder;
 import com.salesianos.triana.playfutday.search.util.SearchCriteria;
 import com.salesianos.triana.playfutday.search.util.SearchCriteriaExtractor;
@@ -27,8 +29,12 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
+import javax.transaction.Transactional;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.*;
 
@@ -42,9 +48,14 @@ public class UserService {
 
     private final PostService postService;
 
+    private final FileSystemStorageService storageService;
+
+    private GenericSpecification genericSpecification;
+
     public User createUser(UserRequest createUserRequest, EnumSet<UserRole> roles) {
         User user = User.builder()
                 .username(createUserRequest.getUsername())
+                .avatar("avatar.png")
                 .email(createUserRequest.getEmail())
                 .password(passwordEncoder.encode(createUserRequest.getPassword()))
                 .phone(createUserRequest.getPhone())
@@ -53,14 +64,38 @@ public class UserService {
         return userRepository.save(user);
     }
 
+    @Transactional
+    public EditInfoUserRequest editProfileAvatar(User user, MultipartFile image) {
+        String filename = storageService.store(image);
+        user.setAvatar(filename);
+        userRepository.save(user);
+        return EditInfoUserRequest.builder()
+                .avatar(filename)
+                .build();
+    }
 
-    public EditInfoUserRequest editProfileAvatar(User user, EditInfoUserRequest editInfoUserRequest) {
-        user.setAvatar(editInfoUserRequest.getAvatar());
+    public EditInfoUserRequest editProfileBio(User user, EditInfoUserRequest request) {
+        user.setBiography(request.getBiography());
+        userRepository.save(user);
         return EditInfoUserRequest.builder()
                 .biography(user.getBiography())
-                .avatar(editInfoUserRequest.getAvatar())
-                .birthday(user.getBirthday())
+                .build();
+    }
+
+
+    public EditInfoUserRequest editProfilePhone(User user, EditInfoUserRequest request) {
+        user.setPhone(request.getPhone());
+        userRepository.save(user);
+        return EditInfoUserRequest.builder()
                 .phone(user.getPhone())
+                .build();
+    }
+
+    public EditInfoUserRequest editProfileBirthday(User user, EditInfoUserRequest request) {
+        user.setBirthday(request.getBirthday());
+        userRepository.save(user);
+        return EditInfoUserRequest.builder()
+                .birthday(user.getBirthday())
                 .build();
     }
 

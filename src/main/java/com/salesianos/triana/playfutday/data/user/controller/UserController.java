@@ -22,6 +22,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import javax.validation.Valid;
@@ -37,8 +38,8 @@ public class UserController {
     private final JwtProvider jwtProvider;
 
 
-    @JsonView(viewUser.UserResponse.class)
     @PostMapping("/auth/register")
+    @JsonView(viewUser.UserResponse.class)
     public ResponseEntity<UserResponse> createUserWithUserRole(@Valid @RequestBody UserRequest createUserRequest) {
         User user = userService.createUserWithUserRole(createUserRequest);
 
@@ -48,13 +49,7 @@ public class UserController {
     /**
      * OBTENER TODOS LOS USUARIOS PARA ALVISTA DEL ADMIN
      */
-/*
-    @JsonView(viewUser.UserDetailsByAdmin.class)
-*/
- /*   @GetMapping("/user")
-    public List<UserResponse> findallUsers() {
-        return userService.findAllUsers();
-    }*/
+
     @GetMapping("/user")
     @JsonView(viewUser.UserDetailsByAdmin.class)
     public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s, @PageableDefault(size = 3, page = 0) Pageable pageable) {
@@ -122,8 +117,27 @@ public class UserController {
 
     @PutMapping("/edit/avatar")
     @JsonView(viewUser.editProfile.class)
-    public EditInfoUserRequest EditProfile(@Valid @RequestBody EditInfoUserRequest editInfoUserRequest, @AuthenticationPrincipal User user) {
-        return userService.editProfileAvatar(user, editInfoUserRequest);
+    public EditInfoUserRequest editProfile(@PathVariable("image") MultipartFile image, @AuthenticationPrincipal User user) {
+        return userService.editProfileAvatar(user, image);
     }
+
+    @PutMapping("/edit/bio")
+    @JsonView(viewUser.editProfile.class)
+    public EditInfoUserRequest editProfileBio(@AuthenticationPrincipal User user, @RequestBody EditInfoUserRequest request) {
+        return userService.editProfileBio(user, request);
+    }
+
+    @PutMapping("/edit/phone")
+    @JsonView(viewUser.editProfile.class)
+    public EditInfoUserRequest editPhone(@Valid @AuthenticationPrincipal User user, @RequestBody EditInfoUserRequest request) {
+        return userService.editProfilePhone(user, request);
+    }
+
+    @PutMapping("/edit/birthday")
+    @JsonView(viewUser.editProfile.class)
+    public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @RequestBody EditInfoUserRequest request) {
+        return userService.editProfileBirthday(user, request);
+    }
+
 
 }

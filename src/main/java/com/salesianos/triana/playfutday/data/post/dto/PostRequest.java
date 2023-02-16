@@ -22,8 +22,5 @@ public class PostRequest {
     @Length(max = 200, message = "{createPostRequest.description.maxLength}")
     private String description;
 
-    @NotBlank(message = "{createPostRequest.image.notBlank}")
-    private String image;
-
 
 }

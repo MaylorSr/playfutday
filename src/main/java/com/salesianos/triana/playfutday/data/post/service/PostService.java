@@ -3,6 +3,7 @@ package com.salesianos.triana.playfutday.data.post.service;
 import com.salesianos.triana.playfutday.data.commentary.dto.CommentaryRequest;
 import com.salesianos.triana.playfutday.data.commentary.model.Commentary;
 import com.salesianos.triana.playfutday.data.commentary.repository.CommentaryRepository;
+import com.salesianos.triana.playfutday.data.files.service.FileSystemStorageService;
 import com.salesianos.triana.playfutday.data.post.dto.PostRequest;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.post.model.Post;
@@ -24,7 +25,9 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.transaction.Transactional;
 import java.util.*;
 
 @Service
@@ -35,6 +38,8 @@ public class PostService {
     private final CommentaryRepository repoCommentary;
 
     private final UserRepository userRepository;
+
+    private final FileSystemStorageService storageService;
 
     public String postExists = "The list of post is empty";
 
@@ -72,11 +77,13 @@ public class PostService {
         return new PageResponse<>(postResponsePage);
     }
 
-    public PostResponse createPostByUser(PostRequest postRequest, User user) {
+    public PostResponse createPostByUser(PostRequest postRequest, MultipartFile image, User user) {
+        String filename = storageService.store(image);
+
         return PostResponse.of(
                 repo.save(Post.builder()
                         .tag(postRequest.getTag())
-                        .image(postRequest.getImage())
+                        .image(filename)
                         .author(user)
                         .description(postRequest.getDescription())
                         .build())
@@ -142,4 +149,20 @@ public class PostService {
         repoCommentary.delete(commentaryOptional);
         return ResponseEntity.noContent().build();
     }
+
+
+    @Transactional
+    public PostResponse createPostOptional(PostRequest postRequest, MultipartFile file, User user) {
+        String filename = storageService.store(file);
+        return PostResponse.of(
+                repo.save(Post.builder()
+                        .tag(postRequest.getTag())
+                        .image(filename)
+                        .author(user)
+                        .description(postRequest.getDescription())
+                        .build())
+        );
+    }
+
+
 }

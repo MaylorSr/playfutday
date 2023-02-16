@@ -24,7 +24,7 @@ public class UserRequest {
     @UniqueEmail(message = "{createUserRequest.unique.email}")
     private String email;
     @NotBlank(message = "{createUserRequest.phone.blank}")
-    @PhoneStructure()
+    @PhoneStructure(message = "{createUserRequest.phone.digits}")
     @UniquePhone(message = "{createUserRequest.phone.exists}")
     private String phone;
     @StrongPassword

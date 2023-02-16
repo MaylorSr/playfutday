@@ -18,9 +18,9 @@ public @interface PhoneStructure {
 
     Class<? extends Payload>[] payload() default {};
 
-    int min() default 13;
+    int min() default 9;
 
-    int max() default 13;
+    int max() default 9;
 
     boolean hasNumber() default true;
 }

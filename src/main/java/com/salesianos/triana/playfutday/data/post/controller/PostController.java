@@ -14,6 +14,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
@@ -70,12 +71,11 @@ public class PostController {
      * @return
      */
     @PostMapping("/")
-    /**
-     * @PreUthenticate(isAuthetica) eso hace que tenga que estar autenticado para poder hacer la peticion
-     */
     @JsonView(viewPost.PostResponse.class)
-    public ResponseEntity<PostResponse> savePostByUser(@Valid @RequestBody PostRequest postRequest, @AuthenticationPrincipal User user) {
-        PostResponse newPost = postService.createPostByUser(postRequest, user);
+    public ResponseEntity<PostResponse> savePostByUser(@Valid @RequestPart("image") MultipartFile image,
+                                                       @RequestPart("post") PostRequest postRequest,
+                                                       @AuthenticationPrincipal User user) {
+        PostResponse newPost = postService.createPostByUser(postRequest, image, user);
         URI createdURI = ServletUriComponentsBuilder
                 .fromCurrentRequest()
                 .path("/{id}")
@@ -142,6 +142,7 @@ public class PostController {
     public ResponseEntity<?> deleteCommentaryByUserForAdmin(@PathVariable Long id) {
         return postService.deleteCommentary(id);
     }
+
 
 
 }
