@@ -8,6 +8,7 @@ import com.salesianos.triana.playfutday.validation.annotation.FieldsValueMatch;
 import com.salesianos.triana.playfutday.validation.annotation.PhoneStructure;
 import com.salesianos.triana.playfutday.validation.annotation.UniquePhone;
 import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -18,13 +19,11 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.time.LocalDate;
 
+@Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@SuperBuilder
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
-@FieldsValueMatch(field = "password", fieldMatch = "verifyPassword",
-        message = "{createUserRequest.password.match}")
 public class EditInfoUserRequest {
     @JsonView(viewUser.editProfile.class)
     private String avatar;
@@ -32,10 +31,10 @@ public class EditInfoUserRequest {
     @Length(max = 200, message = "{editRequest.biography.limit}")
     private String biography;
 
-    @JsonView(viewUser.editProfile.class)
     @NotBlank(message = "{createUserRequest.phone.blank}")
     @PhoneStructure(message = "{createUserRequest.phone.digits}")
     @UniquePhone(message = "{createUserRequest.phone.exists}")
+    @JsonView(viewUser.editProfile.class)
     private String phone;
 
     @JsonView(viewUser.editProfile.class)

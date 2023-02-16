@@ -129,13 +129,13 @@ public class UserController {
 
     @PutMapping("/edit/phone")
     @JsonView(viewUser.editProfile.class)
-    public EditInfoUserRequest editPhone(@Valid @AuthenticationPrincipal User user, @RequestBody EditInfoUserRequest request) {
+    public EditInfoUserRequest editPhone(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
         return userService.editProfilePhone(user, request);
     }
 
     @PutMapping("/edit/birthday")
     @JsonView(viewUser.editProfile.class)
-    public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @RequestBody EditInfoUserRequest request) {
+    public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
         return userService.editProfileBirthday(user, request);
     }
 

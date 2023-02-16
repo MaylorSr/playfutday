@@ -185,14 +185,6 @@ public class UserService {
         return userRepository.findFirstByUsername(username);
     }
 
-   /* public Optional<User> edit(User user) {
-        return userRepository.findById(user.getId())
-                .map(u -> {
-                    u.setAvatar(user.getAvatar());
-                    return userRepository.save(u);
-                }).or(() -> Optional.empty());
-    }*/
-
     public UserResponse editPassword(User user, ChangePasswordRequest changePasswordRequest) {
         return userRepository.findById(user.getId()).map(
                 oldUserPassword -> {
