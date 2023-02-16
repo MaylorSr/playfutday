@@ -25,8 +25,10 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
+import java.net.URI;
 import java.text.ParseException;
 import java.util.Optional;
 import java.util.UUID;
@@ -117,10 +119,18 @@ public class UserController {
         return userService.editPassword(user, changePasswordRequest);
     }
 
-    @PutMapping("/edit/avatar")
+    @PostMapping("/edit/avatar")
     @JsonView(viewUser.editProfile.class)
-    public EditInfoUserRequest editProfile(@PathVariable("image") MultipartFile image, @AuthenticationPrincipal User user) throws StorageException {
-        return userService.editProfileAvatar(user, image);
+    public ResponseEntity<EditInfoUserRequest> editProfile(@RequestPart("image") MultipartFile image, @AuthenticationPrincipal User user) throws StorageException {
+
+        EditInfoUserRequest newPost = userService.editProfileAvatar(user, image);
+        URI createdURI = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
+        return ResponseEntity
+                .created(createdURI)
+                .body(newPost);
     }
 
     @PutMapping("/edit/bio")
