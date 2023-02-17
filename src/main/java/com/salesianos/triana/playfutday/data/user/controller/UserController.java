@@ -150,4 +150,10 @@ public class UserController {
     public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
         return userService.editProfileBirthday(user, request);
     }
+
+    @GetMapping("/me")
+    @JsonView(viewUser.UserInfo.class)
+    public UserResponse getMyProfile(@AuthenticationPrincipal User user){
+        return UserResponse.fromUser(user);
+    }
 }

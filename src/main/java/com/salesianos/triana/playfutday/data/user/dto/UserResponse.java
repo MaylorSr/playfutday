@@ -50,6 +50,9 @@ public class UserResponse {
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected Set<UserRole> roles;
 
+    @JsonView(viewUser.UserInfo.class)
+    protected String toke;
+
     public static UserResponse fromUser(User user) {
         return UserResponse
                 .builder()

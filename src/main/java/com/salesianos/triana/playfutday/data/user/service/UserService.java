@@ -25,6 +25,10 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.bcrypt.BCrypt;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -186,13 +190,12 @@ public class UserService {
     }
 
     public UserResponse editPassword(User user, ChangePasswordRequest changePasswordRequest) {
-        return userRepository.findById(user.getId()).map(
-                oldUserPassword -> {
-                    oldUserPassword.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
-                    oldUserPassword.setLastPasswordChangeAt(LocalDateTime.now());
-                    return UserResponse.fromUser(userRepository.save(oldUserPassword));
-                }
-        ).orElseThrow(() -> new EntityNotFoundException(""));
+        if (passwordEncoder.matches(changePasswordRequest.getOldPassword(), user.getPassword())) {
+            user.setPassword(passwordEncoder.encode(changePasswordRequest.getNewPassword()));
+            user.setLastPasswordChangeAt(LocalDateTime.now());
+            return UserResponse.fromUser(userRepository.save(user));
+        }
+        throw new NotPermission();
     }
 
     public boolean passwordMatch(User user, String clearPassword) {

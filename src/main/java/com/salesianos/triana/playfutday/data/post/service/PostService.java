@@ -52,7 +52,6 @@ public class PostService {
             throw new GlobalEntityListNotFounException(postExists);
         }
         return res;
-
     }
 
 

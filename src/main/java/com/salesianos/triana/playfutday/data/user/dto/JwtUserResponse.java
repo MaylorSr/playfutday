@@ -45,6 +45,7 @@ public class JwtUserResponse extends UserResponse {
 
         JwtUserResponse result = new JwtUserResponse(UserResponse.fromUser(user));
         result.setToken(token);
+
         return result;
     }
 
