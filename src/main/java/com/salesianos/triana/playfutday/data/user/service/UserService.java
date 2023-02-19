@@ -27,15 +27,11 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.persistence.EntityNotFoundException;
 import javax.transaction.Transactional;
-import java.text.ParseException;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @Service
@@ -50,7 +46,6 @@ public class UserService {
 
     private final FileSystemStorageService storageService;
 
-    private GenericSpecification genericSpecification;
 
     public User createUser(UserRequest createUserRequest, EnumSet<UserRole> roles) {
         User user = User.builder()
@@ -212,4 +207,12 @@ public class UserService {
     public Optional<User> findById(UUID id) {
         return userRepository.findById(id);
     }
+
+    @Transactional()
+    public Optional<User> addPostToUser(String username) {
+        return userRepository.findByUsername(username);
+
+    }
+
+
 }

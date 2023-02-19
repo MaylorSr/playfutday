@@ -101,15 +101,16 @@ public class UserController {
 
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
-    public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication =
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
-
         User user = (User) authentication.getPrincipal();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(JwtUserResponse.of(user, token));
+        UserResponse userP = UserResponse.fromUser(user);
+        userP.setToken(token);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userP);
     }
 
 
@@ -149,5 +150,14 @@ public class UserController {
     @JsonView(viewUser.editProfile.class)
     public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
         return userService.editProfileBirthday(user, request);
+    }
+
+    @GetMapping("/me")
+    public UserResponse getMyProfile(@AuthenticationPrincipal User user) {
+        String token = jwtProvider.generateToken(user);
+        Optional<User> u = userService.addPostToUser(user.getUsername());
+        UserResponse userResponse = UserResponse.fromUser(u.get());
+        userResponse.setToken(token);
+        return userResponse;
     }
 }

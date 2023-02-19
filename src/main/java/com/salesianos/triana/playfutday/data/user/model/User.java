@@ -30,9 +30,9 @@ import java.util.stream.Collectors;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-/*@NamedEntityGraph(
+@NamedEntityGraph(
         name = "user_with_posts",
-        attributeNodes = @NamedAttributeNode(value = "myPost"))*/
+        attributeNodes = @NamedAttributeNode(value = "myPost"))
 public class User implements UserDetails {
     @Id
     @GeneratedValue(generator = "UUID")
