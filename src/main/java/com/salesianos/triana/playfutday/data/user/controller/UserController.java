@@ -153,11 +153,17 @@ public class UserController {
     }
 
     @GetMapping("/me")
+<<<<<<< HEAD
     public UserResponse getMyProfile(@AuthenticationPrincipal User user) {
         String token = jwtProvider.generateToken(user);
         Optional<User> u = userService.addPostToUser(user.getUsername());
         UserResponse userResponse = UserResponse.fromUser(u.get());
         userResponse.setToken(token);
         return userResponse;
+=======
+    @JsonView(viewUser.UserInfo.class)
+    public UserResponse getMyProfile(@AuthenticationPrincipal User user){
+        return UserResponse.fromUser(user);
+>>>>>>> db1fde7d5ed9ebaadcd2e937ab9aee3f1e83029f
     }
 }
