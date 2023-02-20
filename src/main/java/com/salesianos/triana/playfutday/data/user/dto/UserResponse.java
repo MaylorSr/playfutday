@@ -51,13 +51,9 @@ public class UserResponse {
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected Set<UserRole> roles;
 
-<<<<<<< HEAD
     @JsonView({viewUser.UserInfo.class})
     protected String token;
-=======
-    @JsonView(viewUser.UserInfo.class)
-    protected String toke;
->>>>>>> db1fde7d5ed9ebaadcd2e937ab9aee3f1e83029f
+
 
     public static UserResponse fromUser(User user) {
         return UserResponse

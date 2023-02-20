@@ -29,7 +29,7 @@ insert into USER_ENTITY (id, username, password, email,avatar, biography, phone,
 insert into USER_ENTITY (id, username, password, email,avatar, biography, phone, birthday, account_non_expired, account_non_locked, credentials_non_expired, roles, enabled, created_at) values ('9905d7cf-66c1-40d5-a1de-3c1de754b030', 'wpalphramand9', '{bcrypt}$2a$12$8KaV785mB1w8ljIyTAZHkuWJ7Jjwl25UexURVuCQ1T8HV97sFgaA.', 'wpalphramand9@yahoo.com','avatar.png', '', '2724869082', '1980-06-26', true, true, true, 'USER', true, current_timestamp);
 
 
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'neymar.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
