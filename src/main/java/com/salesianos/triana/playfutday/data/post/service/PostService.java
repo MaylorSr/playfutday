@@ -83,7 +83,7 @@ public class PostService {
 
         return PostResponse.of(
                 repo.save(Post.builder()
-                        .tag(postRequest.getTag())
+                        .tag(postRequest.getTag().toLowerCase())
                         .image(filename)
                         .author(user)
                         .description(postRequest.getDescription())

@@ -52,7 +52,7 @@ public class PostResponse {
     public static PostResponse of(Post post) {
         return PostResponse.builder()
                 .id(post.getId())
-                .tag(post.getTag())
+                .tag('#'+post.getTag())
                 .description(post.getDescription())
                 .image(post.getImage())
                 .uploadDate(post.getUploadDate())

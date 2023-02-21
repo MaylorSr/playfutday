@@ -1,5 +1,5 @@
 --PASSWORD: QUE1chC2Jv
-insert into USER_ENTITY (id, username, password, email, avatar, biography, phone, birthday, account_non_expired, account_non_locked, credentials_non_expired, roles, enabled, created_at) values ('51057cde-9852-4cd5-be5e-091979495656', 'wbeetham0', '{bcrypt}$2a$12$Zhv2Nz2YX7M3uwCvWa4b1eO.4SdA7ziKlyhR1Yn48FNhL/2Txlzbi','wbeetham0@gmail.com', 'avatar.png', '', '3908006159', '2004-12-29', true, true, true, 'USER, ADMIN', true, current_timestamp);
+insert into USER_ENTITY (id, username, password, email, avatar, biography, phone, birthday, account_non_expired, account_non_locked, credentials_non_expired, roles, enabled, created_at) values ('51057cde-9852-4cd5-be5e-091979495656', 'wbeetham0', '{bcrypt}$2a$12$Zhv2Nz2YX7M3uwCvWa4b1eO.4SdA7ziKlyhR1Yn48FNhL/2Txlzbi','wbeetham0@gmail.com', 'avatar.png', 'Hi i am a new in that!', '3908006159', '2004-12-29', true, true, true, 'USER, ADMIN', true, current_timestamp);
 
 --PASSWORD: 8dNbnHaX
 insert into USER_ENTITY (id, username, password, email,avatar, biography, phone, birthday, account_non_expired, account_non_locked, credentials_non_expired, roles, enabled, created_at) values ('d8825758-d02a-4bcc-8146-95fb6fa3ded7', 'bmacalester1', '{bcrypt}$2a$12$4LadIZ.zR6V1ZA3XInqco.YRSTWOcvugrYR9tjHei2cGxstemqro2', 'bmacalester1@hotmail.com','avatar.png', '', '3011096944', '2002-04-02', true, true, true, 'USER', true, current_timestamp);
@@ -29,26 +29,26 @@ insert into USER_ENTITY (id, username, password, email,avatar, biography, phone,
 insert into USER_ENTITY (id, username, password, email,avatar, biography, phone, birthday, account_non_expired, account_non_locked, credentials_non_expired, roles, enabled, created_at) values ('9905d7cf-66c1-40d5-a1de-3c1de754b030', 'wpalphramand9', '{bcrypt}$2a$12$8KaV785mB1w8ljIyTAZHkuWJ7Jjwl25UexURVuCQ1T8HV97sFgaA.', 'wpalphramand9@yahoo.com','avatar.png', '', '2724869082', '1980-06-26', true, true, true, 'USER', true, current_timestamp);
 
 
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, '7f73bbb2-929b-4228-bfef-46cfaf8e2dfa');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'e814eaf6-64b2-423c-a94e-82c5a09da4dd');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, '7f73bbb2-929b-4228-bfef-46cfaf8e2dfa');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, 'e814eaf6-64b2-423c-a94e-82c5a09da4dd');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, 'eabbe12c-363e-49ff-8b0f-cad8daca9bf9');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
 
 insert into COMMENTARY_ENTITY (id, message, update_commentary, post_id, author) values (NEXTVAL('hibernate_sequence'), 'innovate intuitive models', current_timestamp, '1', 'abb9feac-f0ec-45cf-91a9-5d21c789da2d');
 insert into COMMENTARY_ENTITY (id, message, update_commentary, post_id, author) values (NEXTVAL('hibernate_sequence'), 'productize magnetic e-markets', current_timestamp, '1', '9905d7cf-66c1-40d5-a1de-3c1de754b030');
