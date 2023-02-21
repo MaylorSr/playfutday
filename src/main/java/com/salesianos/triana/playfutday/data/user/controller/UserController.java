@@ -24,12 +24,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
 import java.net.URI;
-import java.text.ParseException;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -56,7 +54,8 @@ public class UserController {
 
     @GetMapping("/user")
     @JsonView(viewUser.UserDetailsByAdmin.class)
-    public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s, @PageableDefault(size = 3, page = 0) Pageable pageable) {
+    public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s,
+                                                   @PageableDefault(size = 3, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
 

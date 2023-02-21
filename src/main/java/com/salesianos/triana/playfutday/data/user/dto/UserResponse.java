@@ -53,10 +53,6 @@ public class UserResponse {
 
     @JsonView({viewUser.UserInfo.class})
     protected String token;
-<<<<<<< HEAD
-=======
-
->>>>>>> 0fa119ebf3e0acb6b5150fef70eb9b20449f6441
 
     public static UserResponse fromUser(User user) {
         return UserResponse

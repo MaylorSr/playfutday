@@ -77,8 +77,11 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/user/{idU}", "/user/{id}/user/{idU}").hasRole("USER")
-                .antMatchers("/banUserByAdmin/{id}").hasRole("ADMIN")
+                .antMatchers("/post/user/{id}/user/{idU}", "/post/**", "/user", "/fav",
+                        "/user/changePassword", "/edit/avatar", "/edit/bio", "/edit/phone", "/edit/birthday", "/me").permitAll()
+                .antMatchers("/banUserByAdmin/{id}", "/post/bane",
+                        "/user/{idU}", "/changeRole/{id}", "/post/user", "/post/delete/commentary/{id}"
+                        , "/delete/commentary/{id}", "/user", "/post/user/{username}").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -92,7 +95,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/refreshtoken"));
+        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login"));
     }
 
 }
