@@ -1,0 +1,12 @@
+services:
+
+  db:
+    image: 'postgres:14-alpine'
+    container_name: playfutday
+    restart: always
+    environment:
+      - POSTGRES_DB=playfutday
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - "5555:5432"

@@ -29,7 +29,7 @@ insert into USER_ENTITY (id, username, password, email,avatar, biography, phone,
 insert into USER_ENTITY (id, username, password, email,avatar, biography, phone, birthday, account_non_expired, account_non_locked, credentials_non_expired, roles, enabled, created_at) values ('9905d7cf-66c1-40d5-a1de-3c1de754b030', 'wpalphramand9', '{bcrypt}$2a$12$8KaV785mB1w8ljIyTAZHkuWJ7Jjwl25UexURVuCQ1T8HV97sFgaA.', 'wpalphramand9@yahoo.com','avatar.png', '', '2724869082', '1980-06-26', true, true, true, 'USER', true, current_timestamp);
 
 
-<<<<<<< HEAD
+
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
@@ -50,8 +50,8 @@ insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) valu
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), 'MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
-=======
-insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'neymar.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
+
+insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#NEYMAR', 'Neymar is the best player', 'neymar.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, '51057cde-9852-4cd5-be5e-091979495656');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#CR7', '', 'cr7.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
@@ -71,7 +71,7 @@ insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) valu
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, '563d2700-0c3c-4276-a4c4-55f861ebe90a');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
 insert into POST_ENTITY (id, tag, description, image, upload_date, user_id) values (NEXTVAL('hibernate_sequence'), '#MESSI', '', 'messi.jpg', current_timestamp, 'd8825758-d02a-4bcc-8146-95fb6fa3ded7');
->>>>>>> 0fa119ebf3e0acb6b5150fef70eb9b20449f6441
+
 
 insert into COMMENTARY_ENTITY (id, message, update_commentary, post_id, author) values (NEXTVAL('hibernate_sequence'), 'innovate intuitive models', current_timestamp, '1', 'abb9feac-f0ec-45cf-91a9-5d21c789da2d');
 insert into COMMENTARY_ENTITY (id, message, update_commentary, post_id, author) values (NEXTVAL('hibernate_sequence'), 'productize magnetic e-markets', current_timestamp, '1', '9905d7cf-66c1-40d5-a1de-3c1de754b030');
