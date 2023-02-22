@@ -152,7 +152,6 @@ public class UserController {
     }
 
     @GetMapping("/me")
-
     public UserResponse getMyProfile(@AuthenticationPrincipal User user) {
         String token = jwtProvider.generateToken(user);
         Optional<User> u = userService.addPostToUser(user.getUsername());
