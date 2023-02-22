@@ -7,6 +7,7 @@ import com.salesianos.triana.playfutday.data.interfaces.user.viewUser;
 import com.salesianos.triana.playfutday.data.post.dto.PostResponse;
 import com.salesianos.triana.playfutday.data.user.model.User;
 import com.salesianos.triana.playfutday.data.user.model.UserRole;
+import com.salesianos.triana.playfutday.security.jwt.access.JwtProvider;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -34,7 +35,7 @@ public class UserResponse {
     protected LocalDateTime createdAt;
     @JsonView({viewUser.UserInfo.class})
     protected String email;
-    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class})
+    @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected String avatar;
     @JsonView({viewUser.UserResponse.class, viewUser.UserInfo.class})
     protected String biography;
@@ -50,6 +51,9 @@ public class UserResponse {
     @JsonView({viewUser.UserInfo.class, viewUser.UserDetailsByAdmin.class, viewUser.UserChangeDate.class})
     protected Set<UserRole> roles;
 
+    @JsonView({viewUser.UserInfo.class})
+    protected String token;
+
     public static UserResponse fromUser(User user) {
         return UserResponse
                 .builder()
@@ -64,6 +68,7 @@ public class UserResponse {
                 .enabled(user.isEnabled())
                 .myPost(user.getMyPost().isEmpty() ? null : user.getMyPost().stream().map(PostResponse::of).toList())
                 .roles(user.getRoles())
+                .token("")
                 .build();
     }
 

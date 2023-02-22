@@ -72,7 +72,7 @@ public class PostController {
      */
     @PostMapping("/")
     @JsonView(viewPost.PostResponse.class)
-    public ResponseEntity<PostResponse> savePostByUser(@Valid @RequestPart("image") MultipartFile image,
+    public ResponseEntity<PostResponse> savePostByUser(@RequestPart("image") MultipartFile image, @Valid
                                                        @RequestPart("post") PostRequest postRequest,
                                                        @AuthenticationPrincipal User user) {
         PostResponse newPost = postService.createPostByUser(postRequest, image, user);

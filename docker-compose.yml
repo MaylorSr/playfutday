@@ -1,0 +1,23 @@
+services:
+
+  db:
+    image: 'postgres:14-alpine'
+    container_name: playfutday
+    restart: always
+    environment:
+      - POSTGRES_DB=playfutday
+      - POSTGRES_USER=user
+      - POSTGRES_PASSWORD=1234
+    ports:
+      - "5555:5432"
+  client:
+    image: 'dpage/pgadmin4'
+    container_name: client
+    restart: always
+    environment:
+      - PGADMIN_DEFAULT_EMAIL=maylorbustamante2001@gmail.com
+      - PGADMIN_DEFAULT_PASSWORD=1234
+    depends_on:
+      - db
+    ports:
+      - "1717:80"

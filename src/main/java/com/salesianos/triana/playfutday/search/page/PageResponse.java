@@ -23,6 +23,7 @@ public class PageResponse<T> {
     private boolean last;
 
     private boolean first;
+    @JsonView({viewUser.UserDetailsByAdmin.class, viewPost.PostResponse.class, viewPost.PostLikeMe.class})
 
     private int totalPages;
 

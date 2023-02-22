@@ -24,10 +24,10 @@ import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.server.ResponseStatusException;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import javax.validation.Valid;
-import java.text.ParseException;
+import java.net.URI;
 import java.util.Optional;
 import java.util.UUID;
 
@@ -54,7 +54,8 @@ public class UserController {
 
     @GetMapping("/user")
     @JsonView(viewUser.UserDetailsByAdmin.class)
-    public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s, @PageableDefault(size = 3, page = 0) Pageable pageable) {
+    public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s,
+                                                   @PageableDefault(size = 3, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
 
@@ -99,15 +100,16 @@ public class UserController {
 
     @PostMapping("/auth/login")
     @JsonView(viewUser.UserInfo.class)
-    public ResponseEntity<JwtUserResponse> login(@RequestBody LoginRequest loginRequest) {
-        Authentication authentication = authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
+    public ResponseEntity<UserResponse> login(@RequestBody LoginRequest loginRequest) {
+        Authentication authentication =
+                authManager.authenticate(new UsernamePasswordAuthenticationToken(loginRequest.getUsername(), loginRequest.getPassword()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
         String token = jwtProvider.generateToken(authentication);
-
         User user = (User) authentication.getPrincipal();
-
-        return ResponseEntity.status(HttpStatus.CREATED).body(JwtUserResponse.of(user, token));
+        UserResponse userP = UserResponse.fromUser(user);
+        userP.setToken(token);
+        return ResponseEntity.status(HttpStatus.CREATED).body(userP);
     }
 
 
@@ -117,10 +119,18 @@ public class UserController {
         return userService.editPassword(user, changePasswordRequest);
     }
 
-    @PutMapping("/edit/avatar")
+    @PostMapping("/edit/avatar")
     @JsonView(viewUser.editProfile.class)
-    public EditInfoUserRequest editProfile(@PathVariable("image") MultipartFile image, @AuthenticationPrincipal User user) throws StorageException {
-        return userService.editProfileAvatar(user, image);
+    public ResponseEntity<EditInfoUserRequest> editProfile(@RequestPart("image") MultipartFile image, @AuthenticationPrincipal User user) throws StorageException {
+
+        EditInfoUserRequest newPost = userService.editProfileAvatar(user, image);
+        URI createdURI = ServletUriComponentsBuilder
+                .fromCurrentRequest()
+                .path("/{id}")
+                .buildAndExpand(user.getId()).toUri();
+        return ResponseEntity
+                .created(createdURI)
+                .body(newPost);
     }
 
     @PutMapping("/edit/bio")
@@ -139,5 +149,14 @@ public class UserController {
     @JsonView(viewUser.editProfile.class)
     public EditInfoUserRequest editBirthday(@AuthenticationPrincipal User user, @Valid @RequestBody EditInfoUserRequest request) {
         return userService.editProfileBirthday(user, request);
+    }
+
+    @GetMapping("/me")
+    public UserResponse getMyProfile(@AuthenticationPrincipal User user) {
+        String token = jwtProvider.generateToken(user);
+        Optional<User> u = userService.addPostToUser(user.getUsername());
+        UserResponse userResponse = UserResponse.fromUser(u.get());
+        userResponse.setToken(token);
+        return userResponse;
     }
 }
