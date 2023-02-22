@@ -17,6 +17,7 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.UUID;
 
 @Data
 @NoArgsConstructor
@@ -41,6 +42,8 @@ public class PostResponse {
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected String author;
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
+    protected UUID idAuthor;
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected String authorFile;
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
     protected List<String> likesByAuthor;
@@ -52,11 +55,12 @@ public class PostResponse {
     public static PostResponse of(Post post) {
         return PostResponse.builder()
                 .id(post.getId())
-                .tag('#'+post.getTag())
+                .tag('#' + post.getTag())
                 .description(post.getDescription())
                 .image(post.getImage())
                 .uploadDate(post.getUploadDate())
                 .author(post.getAuthor().getUsername())
+                .idAuthor(post.getAuthor().getId())
                 .authorFile(post.getAuthor().getAvatar())
                 .likesByAuthor(post.getLikes() == null ? null : post.getLikes().stream().map(User::getUsername).toList())
                 .countLikes(post.getLikes() == null ? 0 : post.getLikes().size())
