@@ -19,8 +19,6 @@ import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.access.AccessDeniedHandler;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-import org.springframework.security.web.firewall.HttpFirewall;
-import org.springframework.security.web.firewall.StrictHttpFirewall;
 
 
 @Configuration
@@ -77,11 +75,10 @@ public class SecurityConfig {
                 .sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/post/user/{id}/user/{idU}", "/post/**", "/user", "/fav",
-                        "/user/changePassword", "/edit/avatar", "/edit/bio", "/edit/phone", "/edit/birthday", "/me").permitAll()
-                .antMatchers("/banUserByAdmin/{id}", "/post/bane",
-                        "/user/{idU}", "/changeRole/{id}", "/post/user", "/post/delete/commentary/{id}"
-                        , "/delete/commentary/{id}", "/user", "/post/user/{username}").hasRole("ADMIN")
+                .antMatchers("/fav", "/user/{idU}", "/user/changePassword", "/me",
+                        "/edit/birthday", "/edit/phone", "/edit/bio", "/edit/avatar",
+                        "/user/changePassword", "/post/**").hasAnyRole("USER", "ADMIN")
+                .antMatchers("/user", "/banUserByAdmin/{id}", "/changeRole/{id}", "/post/delete/commentary/{id}").hasRole("ADMIN")
                 .anyRequest().authenticated();
 
         http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
@@ -95,7 +92,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login"));
+        return (web -> web.ignoring().antMatchers("/h2-console/**", "/auth/register", "/auth/login", "/swagger-ui/**", "/v3/api-docs/**"));
     }
 
 }
