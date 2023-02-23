@@ -13,3 +13,32 @@ ___
 :point_right: [Dirección SWAGGER-IO](http://localhost:8080/swagger-ui/index.html)
 
 :point_right: Se incluye también una colección de Postman para probar datos.
+
+## **DESCRIPCIÓN DEL PROYECTO** :speech_balloon:
+
+Este es un proyecto práctico para el desarrollo de una API REST en lenguaje Java y manejando diferentes tecnologías en la que destaca **Spring**.
+
+También se ha prácticado el manejo de **PostMan** y **Swagger**.
+
+El proyecto trata de una **ApiRest** que gestionará la parte del **Backed** de una red social para personas amantes al fútbol. Por ello, se ha inspirado en redes sociales actuales tales como **Instagram   <img src="https://simpleicons.org/icons/instagram.svg" alt="Instagram Icon" width="30" height="30" style="fill: #E4405F;">
+ y Twitter <img src="https://simpleicons.org/icons/twitter.svg" alt="Instagram Icon" width="30" height="30" style="fill: #E4405F;"> **. <br>
+ Además de incluír una lógica de negocio de una mezcla entre ambas. Por ello te presentaré a continuación las funcionalidades que se podrán realizar en la **API**.
+ 
+ #### USUARIOS ####
+- Subir un post (incluye una imágen, tag y descripción)<br>
+- Borrar su propio post<br>
+- Publicar un comentario en un post
+- Dar/Quitar Like a un post
+- Obtener sus propios posts
+- Crear cuenta de usuario
+- Logearse
+- Modificar datos de su perfil (contraseña, número de teléfono, descripción...)
+- Darse de baja
+- Obtener imágen por su nombre
+ #### ADMIN ####
+-- APARTE DE TODA LAS FUNCIONALIDADES DEL ROL DE USUARIO, SE AÑADE:
+- Eliminar un post de un usuario
+- Eliminar un usuario
+- Banear a un usuario para que no entre en la App
+- Añadir/Quitar rol de **ADMIN** a un usuario
+- Obtener todos los usuarios que estan registrados en la App
