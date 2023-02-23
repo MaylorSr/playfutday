@@ -28,7 +28,7 @@ public class PostResponse {
 
     private static PostRepository postRepository;
 
-    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class})
+    @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected Long id;
     @JsonView({viewPost.PostAdmin.class, viewPost.PostResponse.class, viewUser.UserInfo.class, viewPost.PostLikeMe.class})
     protected String tag;
