@@ -24,6 +24,15 @@ El proyecto trata de una **ApiRest** que gestionará la parte del **Backed** de 
  y Twitter <img src="https://simpleicons.org/icons/twitter.svg" alt="Instagram Icon" width="30" height="30" style="fill: #E4405F;"> **. <br>
  Además de incluír una lógica de negocio de una mezcla entre ambas. Por ello te presentaré a continuación las funcionalidades que se podrán realizar en la **API**.
  
+  -Se te proporcionará usuarios para que puedas probarlos:<br>
+ ### ADMIN
+ - username: wbeetham0
+ - password: QUE1chC2Jv
+ ### USER
+ - username: bmacalester1
+ - password: 8dNbnHaX
+ <br>En el import.sql encontrarás más usuarios si así deseas probar más, las contraseñas de cada usuario se econtrará comentada por encima del insert de cada uno de estos.
+ 
  #### USUARIOS ####
 - Subir un post (incluye una imágen, tag y descripción)<br>
 - Borrar su propio post<br>
