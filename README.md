@@ -10,8 +10,8 @@ ___
 
 ## **Documentación**
 
-:point_right: [Dirección SWAGGER-IO](http://localhost:8080/swagger-ui/index.html)
-
+:point_right: [Dirección SWAGGER-IO](http://localhost:8080/swagger-ui/index.html)<br>
+:point_right: [Dirección FRONTED](https://github.com/MaylorSr/playfutday_flutter)<br>
 :point_right: Se incluye también una colección de Postman para probar datos.
 
 ## **DESCRIPCIÓN DEL PROYECTO** :speech_balloon:
@@ -44,6 +44,7 @@ El proyecto trata de una **ApiRest** que gestionará la parte del **Backed** de 
 - Modificar datos de su perfil (contraseña, número de teléfono, descripción...)
 - Darse de baja
 - Obtener imágen por su nombre
+-Obtener información de un usuario por su id
  #### ADMIN ####
 -- APARTE DE TODA LAS FUNCIONALIDADES DEL ROL DE USUARIO, SE AÑADE:
 - Eliminar un post de un usuario
