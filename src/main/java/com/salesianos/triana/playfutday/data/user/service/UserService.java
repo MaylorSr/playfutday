@@ -26,6 +26,7 @@ import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.multipart.MultipartFile;
 
 import javax.naming.AuthenticationException;
@@ -213,6 +214,10 @@ public class UserService {
     public Optional<User> addPostToUser(String username) {
         return userRepository.findByUsername(username);
 
+    }
+
+    public UserResponse findByIdInfoUser(UUID id) {
+        return UserResponse.fromUser(userRepository.findById(id).orElseThrow(() -> new GlobalEntityNotFounException("User not found")));
     }
 
 

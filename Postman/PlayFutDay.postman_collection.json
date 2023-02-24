@@ -78,14 +78,14 @@
 						"method": "POST",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/post/like/15",
+							"raw": "{{baseUrl}}/post/like/13",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"post",
 								"like",
-								"15"
+								"13"
 							]
 						}
 					},
@@ -577,6 +577,35 @@
 						}
 					},
 					"response": []
+				},
+				{
+					"name": "GET INFO OTHER USER",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{baseUrl}}/info/user/51057cde-9852-4cd5-be5e-091979495656",
+							"host": [
+								"{{baseUrl}}"
+							],
+							"path": [
+								"info",
+								"user",
+								"51057cde-9852-4cd5-be5e-091979495656"
+							]
+						}
+					},
+					"response": []
 				}
 			]
 		},
@@ -599,16 +628,16 @@
 						"method": "DELETE",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/post/user/21/user/51057cde-9852-4cd5-be5e-091979495656",
+							"raw": "{{baseUrl}}/post/user/3/user/d8825758-d02a-4bcc-8146-95fb6fa3ded7",
 							"host": [
 								"{{baseUrl}}"
 							],
 							"path": [
 								"post",
 								"user",
-								"21",
+								"3",
 								"user",
-								"51057cde-9852-4cd5-be5e-091979495656"
+								"d8825758-d02a-4bcc-8146-95fb6fa3ded7"
 							]
 						}
 					},
@@ -676,7 +705,7 @@
 						"method": "GET",
 						"header": [],
 						"url": {
-							"raw": "{{baseUrl}}/user?page=2",
+							"raw": "{{baseUrl}}/user?page=0",
 							"host": [
 								"{{baseUrl}}"
 							],
@@ -686,7 +715,7 @@
 							"query": [
 								{
 									"key": "page",
-									"value": "2",
+									"value": "0",
 									"description": "The number of page"
 								}
 							]

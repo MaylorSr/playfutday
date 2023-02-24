@@ -157,7 +157,7 @@ public class UserController {
     @GetMapping("/user")
     @JsonView(viewUser.UserDetailsByAdmin.class)
     public PageResponse<UserResponse> findAllUsers(@RequestParam(value = "s", defaultValue = "") String s,
-                                                   @PageableDefault(size = 3, page = 0) Pageable pageable) {
+                                                   @PageableDefault(size = 10, page = 0) Pageable pageable) {
         return userService.findAll(s, pageable);
     }
 
@@ -644,4 +644,215 @@ public class UserController {
         userResponse.setToken(token);
         return userResponse;
     }
+
+
+    @Operation(summary = "Este método trae el perfil con los datos de un usuario")
+    @ApiResponses(value = {
+            @ApiResponse(responseCode = "200",
+                    description = "Se ha obtenido los datos correctamente",
+                    content = {@Content(mediaType = "application/json",
+                            schema = @Schema(implementation = EditInfoUserRequest.class),
+                            examples = {@ExampleObject(
+                                    value = """
+                                            [
+                                                {
+                                                    "id": "51057cde-9852-4cd5-be5e-091979495656",
+                                                    "username": "wbeetham0",
+                                                    "createdAt": "23/02/2023 19:47:32",
+                                                    "email": "wbeetham0@gmail.com",
+                                                    "avatar": "avatar.png",
+                                                    "biography": "Hi i am a new in that!",
+                                                    "phone": "3908006159",
+                                                    "birthday": "29/12/2004",
+                                                    "enabled": true,
+                                                    "myPost": [
+                                                        {
+                                                            "id": 1,
+                                                            "tag": "#CR7",
+                                                            "image": "cr7.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0,
+                                                            "commentaries": [
+                                                                {
+                                                                    "id": 41,
+                                                                    "message": "innovate intuitive models",
+                                                                    "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                },
+                                                                {
+                                                                    "id": 42,
+                                                                    "message": "productize magnetic e-markets",
+                                                                    "authorName": "9905d7cf-66c1-40d5-a1de-3c1de754b030",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                },
+                                                                {
+                                                                    "id": 43,
+                                                                    "message": "cultivate dot-com infomediaries",
+                                                                    "authorName": "e814eaf6-64b2-423c-a94e-82c5a09da4dd",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                },
+                                                                {
+                                                                    "id": 44,
+                                                                    "message": "repurpose visionary action-items",
+                                                                    "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                },
+                                                                {
+                                                                    "id": 49,
+                                                                    "message": "embrace clicks-and-mortar e-services",
+                                                                    "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                },
+                                                                {
+                                                                    "id": 63,
+                                                                    "message": "unleash end-to-end experiences",
+                                                                    "authorName": "d8825758-d02a-4bcc-8146-95fb6fa3ded7",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                },
+                                                                {
+                                                                    "id": 65,
+                                                                    "message": "recontextualize open-source initiatives",
+                                                                    "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "id": 2,
+                                                            "tag": "#CR7",
+                                                            "image": "cr7.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0,
+                                                            "commentaries": [
+                                                                {
+                                                                    "id": 45,
+                                                                    "message": "morph web-enabled initiatives",
+                                                                    "authorName": "abb9feac-f0ec-45cf-91a9-5d21c789da2d",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                },
+                                                                {
+                                                                    "id": 70,
+                                                                    "message": "harness transparent platforms",
+                                                                    "authorName": "cc1692e1-f031-4675-a0b1-96aeeada21aa",
+                                                                    "uploadCommentary": "23/02/2023"
+                                                                }
+                                                            ]
+                                                        },
+                                                        {
+                                                            "id": 11,
+                                                            "tag": "#MESSI",
+                                                            "image": "messi.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        },
+                                                        {
+                                                            "id": 12,
+                                                            "tag": "#MESSI",
+                                                            "image": "messi.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        },
+                                                        {
+                                                            "id": 13,
+                                                            "tag": "#MESSI",
+                                                            "image": "messi.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        },
+                                                        {
+                                                            "id": 21,
+                                                            "tag": "##NEYMAR",
+                                                            "description": "Neymar is the best player",
+                                                            "image": "neymar.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        },
+                                                        {
+                                                            "id": 22,
+                                                            "tag": "##CR7",
+                                                            "image": "cr7.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        },
+                                                        {
+                                                            "id": 31,
+                                                            "tag": "##MESSI",
+                                                            "image": "messi.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        },
+                                                        {
+                                                            "id": 32,
+                                                            "tag": "##MESSI",
+                                                            "image": "messi.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        },
+                                                        {
+                                                            "id": 33,
+                                                            "tag": "##MESSI",
+                                                            "image": "messi.jpg",
+                                                            "uploadDate": "23/02/2023",
+                                                            "author": "wbeetham0",
+                                                            "idAuthor": "51057cde-9852-4cd5-be5e-091979495656",
+                                                            "authorFile": "avatar.png",
+                                                            "countLikes": 0
+                                                        }
+                                                    ],
+                                                    "roles": [
+                                                        "ADMIN",
+                                                        "USER"
+                                                    ],
+                                                    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzUxMiJ9.eyJzdWIiOiI1MTA1N2NkZS05ODUyLTRjZDUtYmU1ZS0wOTE5Nzk0OTU2NTYiLCJpYXQiOjE2NzcxNzgwNjAsImV4cCI6MTY3Nzc4Mjg2MH0.5sIXNb0iYbzJveejC_3tFEafTK9vHiUOMF5Bnt5JYDXXNhyLs9aideyfvv8SltTljkHSdTCQ0Zl-wrwt1ww79Q"
+                                                }
+                                            ]
+                                             """
+                            )}
+                    )}),
+            @ApiResponse(responseCode = "401",
+                    description = "No estas logeado",
+                    content = @Content),
+            @ApiResponse(responseCode = "400",
+                    description = "Estas otorgando datos erróneos",
+                    content = @Content),
+            @ApiResponse(responseCode = "404",
+                    description = "Usuario no encontrado",
+                    content = @Content)
+    })
+    @JsonView(viewUser.UserInfo.class)
+    @GetMapping("/info/user/{id}")
+    public UserResponse getInfoUser(@Parameter(name = "ID", description = "Id del usuario a tener info")
+                                    @PathVariable UUID id,
+                                    @AuthenticationPrincipal User user) {
+        return userService.findByIdInfoUser(id);
+    }
+
+
 }
